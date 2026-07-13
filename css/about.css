@@ -1,0 +1,284 @@
+/* ===========================
+   ABOUT PAGE
+=========================== */
+
+/* Hero Section */
+
+.about-hero{
+    width:90%;
+    max-width:1400px;
+    margin:70px auto;
+    text-align:center;
+}
+
+.about-hero h1{
+    font-size:52px;
+    margin-bottom:20px;
+    color:var(--text);
+}
+
+.about-hero p{
+    font-size:20px;
+    color:#666;
+    max-width:700px;
+    margin:auto;
+    line-height:1.8;
+}
+
+
+/* ===========================
+   STORY SECTION
+=========================== */
+
+.about-story{
+    width:90%;
+    max-width:1400px;
+    margin:70px auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+}
+
+.about-story img{
+    width:50%;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+}
+
+.story-content h2{
+    font-size:40px;
+    margin-bottom:20px;
+}
+
+.story-content p{
+    color:#666;
+    line-height:1.9;
+    font-size:17px;
+}
+
+
+/* ===========================
+   MISSION & VISION
+=========================== */
+
+.about-boxes{
+    width:90%;
+    max-width:1400px;
+    margin:80px auto;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:30px;
+}
+
+.about-card{
+    background:#fff;
+    padding:40px;
+    border-radius:15px;
+    box-shadow:var(--shadow);
+    transition:.3s;
+}
+
+.about-card:hover{
+    transform:translateY(-8px);
+}
+
+.about-card h3{
+    font-size:30px;
+    margin-bottom:18px;
+    color:var(--primary);
+}
+
+.about-card p{
+    color:#666;
+    line-height:1.8;
+}
+
+
+/* ===========================
+   WHY CHOOSE US
+=========================== */
+
+.why-us-about{
+    width:90%;
+    max-width:1400px;
+    margin:90px auto;
+}
+
+.why-us-about h2{
+    text-align:center;
+    font-size:42px;
+    margin-bottom:50px;
+}
+
+.features-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+}
+
+.feature-card{
+    background:#fff;
+    padding:35px 25px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    text-align:center;
+    transition:.3s;
+}
+
+.feature-card:hover{
+    transform:translateY(-8px);
+}
+
+.feature-card .icon{
+    font-size:48px;
+    margin-bottom:20px;
+}
+
+.feature-card h3{
+    font-size:24px;
+    margin-bottom:12px;
+}
+
+.feature-card p{
+    color:#666;
+    line-height:1.7;
+}
+
+
+/* ===========================
+   STATS
+=========================== */
+
+.stats{
+    width:90%;
+    max-width:1400px;
+    margin:90px auto 120px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+}
+
+.stat-card{
+    background:linear-gradient(135deg,#ff6b00,#ff8c32);
+    color:#fff;
+    padding:45px 20px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 15px 35px rgba(255,107,0,.25);
+    transition:.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-8px);
+}
+
+.stat-card h2{
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.stat-card p{
+    font-size:18px;
+    opacity:.95;
+}
+
+
+/* ===========================
+   CTA SECTION
+=========================== */
+
+.about-cta{
+    width:90%;
+    max-width:1400px;
+    margin:90px auto;
+    background:linear-gradient(135deg,#ff6b00,#ff8c32);
+    color:#fff;
+    text-align:center;
+    padding:70px 40px;
+    border-radius:20px;
+}
+
+.about-cta h2{
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.about-cta p{
+    font-size:20px;
+    margin-bottom:35px;
+    opacity:.95;
+}
+
+.about-cta button{
+    background:#fff;
+    color:var(--primary);
+    padding:16px 40px;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.about-cta button:hover{
+    transform:translateY(-4px);
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:992px){
+
+.about-story{
+    grid-template-columns:1fr;
+}
+
+.about-boxes{
+    grid-template-columns:1fr;
+}
+
+.features-grid{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.stats{
+    grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:768px){
+
+.about-hero h1{
+    font-size:40px;
+}
+
+.story-content h2{
+    font-size:32px;
+}
+
+.why-us-about h2{
+    font-size:34px;
+}
+
+.features-grid{
+    grid-template-columns:1fr;
+}
+
+.stats{
+    grid-template-columns:1fr;
+}
+
+.about-cta h2{
+    font-size:34px;
+}
+
+.about-cta p{
+    font-size:18px;
+}
+
+}

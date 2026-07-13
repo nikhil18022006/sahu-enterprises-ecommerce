@@ -1,0 +1,247 @@
+/* ==========================================
+   SUCCESS PAGE
+========================================== */
+
+.success-section {
+
+    min-height: 80vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 60px 20px;
+
+    background: #f8f9fa;
+
+}
+
+/* ==========================================
+   SUCCESS CARD
+========================================== */
+
+.success-card {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    background: #fff;
+
+    padding: 50px;
+
+    border-radius: 20px;
+
+    text-align: center;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .08);
+
+    animation: fadeUp .6s ease;
+
+}
+
+/* ==========================================
+   SUCCESS ICON
+========================================== */
+
+.success-icon {
+
+    width: 120px;
+
+    height: 120px;
+
+    margin: 0 auto 25px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    color: #fff;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 60px;
+
+    animation: pop .5s ease;
+
+}
+
+/* ==========================================
+   TITLE
+========================================== */
+
+.success-card h1 {
+
+    font-size: 40px;
+
+    margin-bottom: 15px;
+
+    color: #222;
+
+}
+
+.success-card p {
+
+    font-size: 18px;
+
+    color: #666;
+
+    margin-bottom: 35px;
+
+}
+
+/* ==========================================
+   ORDER DETAILS
+========================================== */
+
+/* ==========================
+   ORDER DETAILS
+========================== */
+
+.order-details .order-detail{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 25px;
+    border-bottom:1px solid #e5e5e5;
+}
+
+.order-details .order-detail:last-child{
+    border-bottom:none;
+}
+
+.order-details .order-detail span{
+    color:#666;
+}
+
+.order-details .order-detail strong{
+    font-weight:700;
+}
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.success-buttons{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:30px;
+}
+
+.success-buttons .btn{
+    padding:14px 28px;
+    border-radius:10px;
+    text-decoration:none;
+    color:#fff;
+    background:#ff6b00;
+    font-weight:600;
+    transition:.3s;
+}
+
+.success-buttons .secondary{
+    background:#222;
+}
+
+.success-buttons .btn:hover{
+    transform:translateY(-3px);
+}
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+
+@keyframes pop {
+
+    from {
+
+        transform: scale(.5);
+
+        opacity: 0;
+
+    }
+
+    to {
+
+        transform: scale(1);
+
+        opacity: 1;
+
+    }
+
+}
+
+@keyframes fadeUp {
+
+    from {
+
+        transform: translateY(40px);
+
+        opacity: 0;
+
+    }
+
+    to {
+
+        transform: translateY(0);
+
+        opacity: 1;
+
+    }
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px) {
+
+    .success-card{
+    width:100%;
+    max-width:650px;
+    margin:auto;
+}
+
+    .success-card h1 {
+
+        font-size: 30px;
+
+    }
+
+    .success-icon {
+
+        width: 90px;
+
+        height: 90px;
+
+        font-size: 45px;
+
+    }
+
+    .detail {
+
+        flex-direction: column;
+
+        gap: 8px;
+
+    }
+
+    .success-buttons {
+
+        flex-direction: column;
+
+    }
+
+    .success-buttons .btn {
+
+        width: 100%;
+
+    }
+
+}

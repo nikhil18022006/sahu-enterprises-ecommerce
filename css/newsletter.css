@@ -1,0 +1,83 @@
+/* ===========================
+   NEWSLETTER
+=========================== */
+
+.newsletter{
+
+    background:var(--white);
+
+    padding:100px 20px;
+
+    text-align:center;
+
+}
+
+.newsletter-content{
+
+    max-width:700px;
+
+    margin:auto;
+
+}
+
+.newsletter h2{
+
+    font-size:40px;
+
+    margin-bottom:15px;
+
+}
+
+.newsletter p{
+
+    color:#666;
+
+    font-size:18px;
+
+    margin-bottom:35px;
+
+}
+
+.newsletter-form{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.newsletter-form input{
+
+    width:400px;
+
+    max-width:100%;
+
+    padding:15px;
+
+    border:2px solid #ddd;
+
+    border-radius:12px;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:var(--transition);
+
+}
+
+.newsletter-form input:focus{
+
+    border-color:var(--primary-color);
+
+}
+
+.newsletter-form button{
+
+    padding:15px 35px;
+
+}

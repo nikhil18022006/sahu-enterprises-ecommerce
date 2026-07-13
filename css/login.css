@@ -1,0 +1,330 @@
+/* ===========================
+   LOGIN PAGE
+=========================== */
+
+
+/* Login Section */
+
+.login-section{
+
+    width:90%;
+    max-width:1400px;
+
+    margin:80px auto;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+/* ===========================
+   LOGIN CARD
+=========================== */
+
+.login-card{
+
+    width:100%;
+    max-width:520px;
+
+    background:var(--white);
+
+    padding:50px;
+
+    border-radius:20px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.login-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+
+/* ===========================
+   HEADING
+=========================== */
+
+.login-card h1{
+
+    text-align:center;
+
+    font-size:42px;
+
+    margin-bottom:15px;
+
+}
+
+.login-card>p{
+
+    text-align:center;
+
+    color:#666;
+
+    font-size:18px;
+
+    margin-bottom:35px;
+
+    line-height:1.7;
+
+}
+
+
+/* ===========================
+   FORM
+=========================== */
+
+.login-card form{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.login-card label{
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+    color:#333;
+
+}
+
+
+/* ===========================
+   INPUTS
+=========================== */
+
+.login-card input[type="email"],
+.login-card input[type="password"]{
+
+    width:100%;
+
+    padding:16px 18px;
+
+    margin-bottom:22px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+.login-card input[type="email"]:focus,
+.login-card input[type="password"]:focus{
+
+    border-color:var(--primary);
+
+    box-shadow:0 0 10px rgba(255,107,0,.15);
+
+}
+
+
+/* ===========================
+   REMEMBER & FORGOT
+=========================== */
+
+.login-options{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+    gap:20px;
+
+}
+
+.remember{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    color:#555;
+
+}
+
+.remember input{
+
+    width:18px;
+
+    height:18px;
+
+    cursor:pointer;
+
+}
+
+.forgot-password{
+
+    text-decoration:none;
+
+    color:var(--primary);
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.forgot-password:hover{
+
+    color:#ff8c32;
+
+}
+
+
+/* ===========================
+   LOGIN BUTTON
+=========================== */
+
+.login-btn{
+
+    width:100%;
+
+    height:58px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    border-radius:10px;
+
+}
+
+
+/* ===========================
+   REGISTER LINK
+=========================== */
+
+.register-link{
+
+    margin-top:30px;
+
+    text-align:center;
+
+}
+
+.register-link p{
+
+    color:#666;
+
+    font-size:16px;
+
+}
+
+.register-link a{
+
+    text-decoration:none;
+
+    color:var(--primary);
+
+    font-weight:700;
+
+}
+
+.register-link a:hover{
+
+    color:#ff8c32;
+
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:768px){
+
+.login-card{
+
+    padding:35px 25px;
+
+}
+
+.login-card h1{
+
+    font-size:34px;
+
+}
+
+.login-card>p{
+
+    font-size:16px;
+
+}
+
+.login-options{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.login-btn{
+
+    height:54px;
+
+}
+
+}
+
+@media(max-width:500px){
+
+.login-card{
+
+    padding:25px 20px;
+
+}
+
+.login-card h1{
+
+    font-size:30px;
+
+}
+
+.login-card label{
+
+    font-size:15px;
+
+}
+
+.login-card input{
+
+    font-size:15px;
+
+}
+
+.register-link p{
+
+    font-size:15px;
+
+}
+
+}

@@ -1,0 +1,397 @@
+/* ===========================
+   CHECKOUT PAGE
+=========================== */
+
+
+/* ===========================
+   PAGE TITLE
+=========================== */
+
+.checkout-title{
+    text-align:center;
+    padding:70px 20px 50px;
+}
+
+.checkout-title h1{
+    font-size:48px;
+    margin-bottom:15px;
+}
+
+.checkout-title p{
+    font-size:18px;
+    color:#666;
+}
+
+
+/* ===========================
+   CHECKOUT LAYOUT
+=========================== */
+
+.checkout-container{
+    width:90%;
+    max-width:1400px;
+    margin:0 auto 80px;
+
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:40px;
+
+    align-items:flex-start;
+}
+
+
+/* ===========================
+   BILLING CARD
+=========================== */
+
+.billing{
+    background:#fff;
+    padding:40px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.billing h2{
+    font-size:30px;
+    margin-bottom:30px;
+}
+
+
+/* ===========================
+   FORM
+=========================== */
+
+.billing form{
+    display:flex;
+    flex-direction:column;
+}
+
+.billing label{
+    font-weight:600;
+    margin-bottom:8px;
+    color:#333;
+}
+
+.billing input,
+.billing textarea{
+    width:100%;
+    padding:16px 18px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    font-size:16px;
+
+    margin-bottom:22px;
+
+    outline:none;
+
+    transition:.3s;
+}
+
+.billing input:focus,
+.billing textarea:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 8px rgba(255,107,0,.15);
+}
+
+.billing textarea{
+    resize:vertical;
+    min-height:130px;
+}
+
+
+/* ===========================
+   CITY & STATE
+=========================== */
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+
+
+/* ===========================
+   PAYMENT
+=========================== */
+
+.billing h3{
+    margin:10px 0 20px;
+    font-size:24px;
+}
+
+.payment-method{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.payment-method label{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    background:#fafafa;
+
+    padding:16px;
+
+    border-radius:10px;
+
+    border:1px solid #eee;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.payment-method label:hover{
+    border-color:var(--primary);
+    background:#fff7f1;
+}
+
+.payment-method input[type="radio"]{
+    width:18px;
+    height:18px;
+    margin:0;
+}
+
+
+/* ===========================
+   ORDER SUMMARY
+=========================== */
+
+.order-summary{
+    background:#fff;
+    padding:35px;
+
+    border-radius:16px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+    position:sticky;
+    top:110px;
+}
+
+.order-summary h2{
+    font-size:30px;
+    margin-bottom:30px;
+}
+
+
+/* ===========================
+   SUMMARY ROWS
+=========================== */
+
+.summary-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:18px;
+
+    font-size:17px;
+}
+
+.summary-item span:last-child{
+    font-weight:600;
+}
+
+.order-summary hr{
+    border:none;
+    border-top:1px solid #eee;
+    margin:25px 0;
+}
+
+.summary-item.total{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.summary-item.total span{
+    color:var(--primary);
+}
+
+
+/* ===========================
+   PLACE ORDER BUTTON
+=========================== */
+
+.place-order{
+    width:100%;
+    height:58px;
+
+    margin-top:25px;
+
+    font-size:18px;
+    font-weight:600;
+
+    border-radius:10px;
+}
+
+
+/* ===========================
+   BACK TO CART
+=========================== */
+
+.back-cart{
+    display:block;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    color:var(--primary);
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.back-cart:hover{
+    color:#ff8c32;
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:1100px){
+
+.checkout-container{
+
+    grid-template-columns:1fr;
+
+}
+
+.order-summary{
+
+    position:static;
+
+}
+
+}
+
+
+@media(max-width:768px){
+
+.checkout-title h1{
+
+    font-size:38px;
+
+}
+
+.billing{
+
+    padding:25px;
+
+}
+
+.row{
+
+    grid-template-columns:1fr;
+
+}
+
+.order-summary{
+
+    padding:25px;
+
+}
+
+.order-summary h2{
+
+    font-size:26px;
+
+}
+
+.summary-item.total{
+
+    font-size:24px;
+
+}
+
+}
+
+
+@media(max-width:500px){
+
+.checkout-title h1{
+
+    font-size:32px;
+
+}
+
+.billing h2{
+
+    font-size:26px;
+
+}
+
+.billing h3{
+
+    font-size:20px;
+
+}
+
+.billing input,
+.billing textarea{
+
+    font-size:15px;
+
+}
+
+.payment-method label{
+
+    font-size:15px;
+
+    padding:14px;
+
+}
+
+.place-order{
+
+    height:54px;
+
+    font-size:17px;
+
+}
+
+}
+/* ==========================
+   DYNAMIC ORDER ITEMS
+========================== */
+
+#checkout-items{
+
+    margin-bottom:20px;
+
+}
+
+#checkout-items .summary-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 0;
+
+    border-bottom:1px solid #eee;
+
+}
+
+#checkout-items .summary-item:last-child{
+
+    border-bottom:none;
+
+}

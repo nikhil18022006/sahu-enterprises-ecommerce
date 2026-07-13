@@ -1,0 +1,49 @@
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width:768px) {
+
+    header {
+
+        flex-direction: column;
+
+        gap: 20px;
+
+        padding: 20px;
+
+    }
+
+    .search {
+
+        width: 100%;
+
+    }
+
+    .search input {
+
+        width: 100%;
+
+    }
+
+    .hero {
+
+        flex-direction: column;
+
+        text-align: center;
+
+    }
+
+    .hero-text h2 {
+
+        font-size: 40px;
+
+    }
+
+    .category-grid {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+}

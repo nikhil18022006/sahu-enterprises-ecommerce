@@ -1,0 +1,70 @@
+/* ===========================
+   CATEGORIES
+=========================== */
+
+.categories{
+    padding:80px 8%;
+    background:#ffffff;
+}
+
+.categories h2{
+    text-align:center;
+    font-size:40px;
+    margin-bottom:50px;
+}
+
+.category-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:30px;
+
+}
+
+.category-card{
+
+    background:#f8f8f8;
+
+    padding:30px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    transition:0.3s ease;
+
+    cursor:pointer;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+}
+
+.category-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,0.15);
+
+}
+
+.category-card img{
+
+    width:100px;
+
+    height:100px;
+
+    object-fit:contain;
+
+    margin:0 auto 20px;
+
+}
+
+.category-card h3{
+
+    font-size:22px;
+
+    color:#222;
+
+}
