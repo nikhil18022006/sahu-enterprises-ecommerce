@@ -2,9 +2,12 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// ===============================
 // Register User
+// ===============================
 const registerUser = async (req, res) => {
     try {
+
         const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
@@ -49,7 +52,9 @@ const registerUser = async (req, res) => {
     }
 };
 
+// ===============================
 // Login User
+// ===============================
 const loginUser = async (req, res) => {
     try {
 
@@ -108,7 +113,9 @@ const loginUser = async (req, res) => {
     }
 };
 
-// Get User Profile
+// ===============================
+// Get Profile
+// ===============================
 const getProfile = async (req, res) => {
     try {
 
@@ -138,7 +145,9 @@ const getProfile = async (req, res) => {
     }
 };
 
+// ===============================
 // Admin Dashboard
+// ===============================
 const adminDashboard = async (req, res) => {
     try {
 
@@ -160,9 +169,127 @@ const adminDashboard = async (req, res) => {
     }
 };
 
+// ===============================
+// Get All Users (Admin)
+// ===============================
+const getAllUsers = async (req, res) => {
+    try {
+
+        const users = await User
+            .find()
+            .select("-password")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            count: users.length,
+            users
+        });
+
+    } catch (error) {
+
+        console.error("GET USERS ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+};
+
+// ===============================
+// Update User Role (Admin)
+// ===============================
+const updateUserRole = async (req, res) => {
+    try {
+
+        const { role } = req.body;
+
+        if (!["user", "admin"].includes(role)) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Invalid role"
+            });
+
+        }
+
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+
+        }
+
+        user.role = role;
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "User role updated successfully",
+            user
+        });
+
+    } catch (error) {
+
+        console.error("UPDATE ROLE ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+};
+
+// ===============================
+// Delete User (Admin)
+// ===============================
+const deleteUser = async (req, res) => {
+    try {
+
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+
+        }
+
+        await User.findByIdAndDelete(req.params.id);
+
+        return res.status(200).json({
+            success: true,
+            message: "User deleted successfully"
+        });
+
+    } catch (error) {
+
+        console.error("DELETE USER ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
     getProfile,
-    adminDashboard
+    adminDashboard,
+    getAllUsers,
+    updateUserRole,
+    deleteUser
 };

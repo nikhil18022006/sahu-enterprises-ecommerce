@@ -37,6 +37,12 @@ const addToCart = async (req, res) => {
         // Find User Cart
         let cart = await Cart.findOne({ user: userId });
 
+        console.log("========== ADD TO CART ==========");
+        console.log("User ID:", userId);
+        console.log("Product ID:", productId);
+        console.log("Cart Found:", cart);
+        console.log("Items Before:", cart ? cart.items : []);
+
         // If Cart Doesn't Exist, Create One
         if (!cart) {
 
@@ -80,7 +86,11 @@ const addToCart = async (req, res) => {
         }
 
         // Save Updated Cart
+        console.log("Items After:", cart.items);
+
         await cart.save();
+
+        console.log("Cart Saved Successfully");
 
         return res.status(200).json({
             success: true,

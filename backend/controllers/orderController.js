@@ -179,9 +179,11 @@ const getAllOrders = async (req, res) => {
 // ===============================
 const updateOrderStatus = async (req, res) => {
     try {
+
         const orderId = req.params.id;
 
         const order = await Order.findById(orderId);
+
         // Check if order exists
         if (!order) {
             return res.status(404).json({
@@ -189,9 +191,12 @@ const updateOrderStatus = async (req, res) => {
                 message: "Order not found"
             });
         }
+
+        // Update order status
         order.orderStatus = req.body.orderStatus;
 
         await order.save();
+
         return res.status(200).json({
             success: true,
             message: "Order status updated successfully",
@@ -209,6 +214,7 @@ const updateOrderStatus = async (req, res) => {
 
     }
 };
+
 module.exports = {
     placeOrder,
     getMyOrders,

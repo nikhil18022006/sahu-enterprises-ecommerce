@@ -42,7 +42,10 @@ const createRazorpayOrder = async (req, res) => {
 };
 
 // Verify Payment
+
 const verifyPayment = async (req, res) => {
+    console.log("VERIFY PAYMENT API HIT");
+    console.log(req.body);
     try {
 
         const {
@@ -114,7 +117,7 @@ const verifyPayment = async (req, res) => {
 
             paymentStatus: "Paid",
 
-            orderStatus: "Processing",
+            orderStatus: "Confirmed",
 
             razorpayOrderId: razorpay_order_id,
 

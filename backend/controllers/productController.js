@@ -1,8 +1,20 @@
 const Product = require("../models/Product");
 
 const createProduct = async (req, res) => {
+
     try {
-        const product = await Product.create(req.body);
+
+        const productData = {
+            ...req.body
+        };
+
+        if (req.files && req.files.length > 0) {
+
+            productData.images = req.files.map(file => file.path);
+
+        }
+
+        const product = await Product.create(productData);
 
         return res.status(201).json({
             success: true,
@@ -19,6 +31,7 @@ const createProduct = async (req, res) => {
         });
 
     }
+
 };
 const getProducts = async (req, res) => {
     try {
@@ -69,24 +82,39 @@ const getProductById = async (req, res) => {
     }
 };
 const updateProduct = async (req, res) => {
+
     try {
 
         const { id } = req.params;
 
+        const updatedData = {
+            ...req.body
+        };
+
+        if (req.files && req.files.length > 0) {
+
+            updatedData.images = req.files.map(file => file.path);
+
+        }
+
         const product = await Product.findByIdAndUpdate(
+
             id,
-            req.body,
+            updatedData,
             {
                 new: true,
                 runValidators: true
             }
+
         );
 
         if (!product) {
+
             return res.status(404).json({
                 success: false,
                 message: "Product not found"
             });
+
         }
 
         return res.status(200).json({
@@ -103,6 +131,7 @@ const updateProduct = async (req, res) => {
         });
 
     }
+
 };
 const deleteProduct = async (req, res) => {
     try {
