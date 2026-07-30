@@ -3,7 +3,7 @@
 // ADMIN ORDER DETAILS
 // ==========================================
 
-const BASE_URL = "https://sahu-enterprises-ecommerce.onrender.com/api";
+
 
 const token = localStorage.getItem("token");
 const user = JSON.parse(localStorage.getItem("user"));
