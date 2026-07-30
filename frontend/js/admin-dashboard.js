@@ -2,26 +2,27 @@
 // SAHU ENTERPRISES
 // ADMIN DASHBOARD
 // ==========================================
-const user = JSON.parse(localStorage.getItem("user"));
 
-if (!user || user.role !== "admin") {
-
-    alert("Access Denied");
-
-    window.location.href = "../login.html";
-
-}
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://sahu-enterprises-ecommerce.onrender.com/api";
 
 const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user"));
 
 // ==========================================
 // CHECK LOGIN
 // ==========================================
 
-if (!token) {
+if (!token || !user) {
 
     alert("Please login first.");
+
+    window.location.href = "../login.html";
+
+}
+
+if (user.role !== "admin") {
+
+    alert("Access Denied");
 
     window.location.href = "../login.html";
 
@@ -37,8 +38,11 @@ async function loadDashboard() {
 
         const response = await fetch(`${BASE_URL}/admin/dashboard`, {
 
+            method: "GET",
+
             headers: {
-                Authorization: `Bearer ${token}`
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
             }
 
         });
@@ -47,7 +51,7 @@ async function loadDashboard() {
 
         if (!response.ok) {
 
-            alert(data.message);
+            alert(data.message || "Failed to load dashboard.");
 
             return;
 
@@ -67,7 +71,7 @@ async function loadDashboard() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Dashboard Error:", error);
 
         alert("Unable to load dashboard.");
 
@@ -79,8 +83,7 @@ async function loadDashboard() {
 // LOGOUT
 // ==========================================
 
-document.getElementById("logout-btn")
-.addEventListener("click", function () {
+document.getElementById("logout-btn").addEventListener("click", () => {
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
