@@ -1,67 +1,58 @@
-// ==========================================
-// SAHU ENTERPRISES
-// ADMIN ORDER DETAILS
-// PART 3.1
-// ==========================================
+/* ==========================================
+   SAHU ENTERPRISES
+   ADMIN ORDER DETAILS
+   PART 3.1A
+========================================== */
 
-// Authentication
+// ==========================================
+// CONFIG
+// ==========================================
 
 const token = localStorage.getItem("token");
-const user = JSON.parse(localStorage.getItem("user"));
 
-const orderContainer = document.getElementById("order-details");
-
-// Redirect if not logged in
-
-if (!token || !user) {
-
-    alert("Please login first.");
-
-    window.location.href = "../login.html";
-
-}
-
-// Allow only admin
-
-if (user.role !== "admin") {
-
-    alert("Access Denied");
-
-    window.location.href = "../login.html";
-
-}
-
-// Get Order ID
+const orderSection = document.getElementById("order-details");
 
 const params = new URLSearchParams(window.location.search);
 
 const orderId = params.get("id");
 
-if (!orderId) {
+// ==========================================
+// AUTH CHECK
+// ==========================================
 
-    window.location.href = "orders.html";
+if (!token) {
+
+    alert("Please login first.");
+
+    window.location.href = "../login.html";
+
+    throw new Error("No Token");
 
 }
 
 // ==========================================
-// Helper Functions
+// IMAGE HELPER
 // ==========================================
 
-// Safe image URL
+function getProductImage(product) {
 
-function getProductImage(product){
+    if (!product) {
 
-    if(product?.images?.length){
+        return "../../images/no-image.png";
+
+    }
+
+    if (product.images && product.images.length > 0) {
 
         const img = product.images[0];
 
-        if(img.startsWith("http")){
+        if (img.startsWith("http")) {
 
             return img;
 
         }
 
-        return `${BASE_URL.replace("/api","")}/${img}`;
+        return `${BASE_URL.replace("/api", "")}/${img}`;
 
     }
 
@@ -69,37 +60,77 @@ function getProductImage(product){
 
 }
 
-// Format Date
+// ==========================================
+// MONEY FORMAT
+// ==========================================
 
-function formatDate(date){
+function formatPrice(value) {
 
-    return new Date(date).toLocaleDateString("en-IN",{
+    return Number(value || 0).toLocaleString("en-IN", {
 
-        day:"2-digit",
+        style: "currency",
 
-        month:"long",
-
-        year:"numeric"
+        currency: "INR"
 
     });
 
 }
 
-// Currency
+// ==========================================
+// DATE FORMAT
+// ==========================================
 
-function money(amount){
+function formatDate(date) {
 
-    return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
+    if (!date) return "-";
+
+    return new Date(date).toLocaleString("en-IN", {
+
+        dateStyle: "medium",
+
+        timeStyle: "short"
+
+    });
 
 }
 
 // ==========================================
-// Load Order
+// STATUS BADGE
 // ==========================================
 
-async function loadOrder(){
+function getStatusClass(status) {
 
-    orderContainer.innerHTML = `
+    switch ((status || "").toLowerCase()) {
+
+        case "confirmed":
+            return "confirmed";
+
+        case "pending":
+            return "pending";
+
+        case "shipped":
+            return "shipped";
+
+        case "delivered":
+            return "delivered";
+
+        case "cancelled":
+            return "cancelled";
+
+        default:
+            return "pending";
+
+    }
+
+}
+
+// ==========================================
+// LOADING
+// ==========================================
+
+function showLoading() {
+
+    orderSection.innerHTML = `
 
         <div class="loading">
 
@@ -107,13 +138,53 @@ async function loadOrder(){
 
             <h2>Loading Order...</h2>
 
-            <p>Please wait...</p>
+            <p>Please wait.</p>
 
         </div>
 
     `;
 
-    try{
+}
+
+// ==========================================
+// ERROR
+// ==========================================
+
+function showError(message) {
+
+    orderSection.innerHTML = `
+
+        <div class="empty-state">
+
+            <i class="fas fa-circle-exclamation fa-4x"></i>
+
+            <h2>Unable to Load Order</h2>
+
+            <p>${message}</p>
+
+        </div>
+
+    `;
+
+}
+
+// ==========================================
+// FETCH ORDER
+// ==========================================
+
+async function fetchOrder() {
+
+    if (!orderId) {
+
+        showError("Order ID Missing");
+
+        return;
+
+    }
+
+    showLoading();
+
+    try {
 
         const response = await fetch(
 
@@ -121,9 +192,9 @@ async function loadOrder(){
 
             {
 
-                headers:{
+                headers: {
 
-                    Authorization:`Bearer ${token}`
+                    Authorization: `Bearer ${token}`
 
                 }
 
@@ -133,187 +204,755 @@ async function loadOrder(){
 
         const data = await response.json();
 
-        if(!response.ok){
+        if (!response.ok) {
 
-            throw new Error(data.message || "Unable to fetch order");
+            throw new Error(
+
+                data.message ||
+
+                "Unable to fetch order."
+
+            );
 
         }
 
-        renderOrder(data.order);
+        renderOrder(data);
 
     }
 
-    catch(error){
+    catch (error) {
 
         console.error(error);
 
-        orderContainer.innerHTML=`
-
-            <div class="empty-state">
-
-                <h2>Order Not Found</h2>
-
-                <p>${error.message}</p>
-
-                <a href="orders.html" class="back-btn">
-
-                    ← Back to Orders
-
-                </a>
-
-            </div>
-
-        `;
+        showError(error.message);
 
     }
 
 }
+
 // ==========================================
-// PART 3.2
-// RENDER ORDER
+// INITIALIZE
 // ==========================================
 
-function renderOrder(order){
+document.addEventListener(
 
-    const address = order.shippingAddress || {};
+    "DOMContentLoaded",
 
-    const status = order.orderStatus || "Pending";
+    fetchOrder
 
-    const statusClass = status.toLowerCase().replace(/\s+/g,"-");
+);
+/* ==========================================
+   PART 3.1B-1
+   MAIN ORDER LAYOUT
+========================================== */
 
-    let productsHTML = "";
+function renderOrder(order) {
 
-    (order.items || []).forEach(item=>{
+    const customer = order.user || {};
 
-        const product = item.product || {};
+    const shipping = order.shippingAddress || {};
 
-        productsHTML += `
+    const payment = order.payment || {};
 
-        <div class="product-item">
+    const products = order.items || order.products || [];
 
-            <div class="product-left">
+    const subtotal = order.subtotal || order.totalAmount || order.total || 0;
 
-                <img
-                    src="${getProductImage(product)}"
-                    alt="${product.name || "Product"}"
-                    onerror="this.src='../../images/no-image.png'">
+    const shippingCharge = order.shippingCharge || 0;
 
-                <div class="product-details">
+    const tax = order.tax || 0;
 
-                    <h3>${product.name || "Product"}</h3>
+    const discount = order.discount || 0;
 
-                    <p>
-                        SKU :
-                        ${product._id?.slice(-6) || "N/A"}
-                    </p>
+    const grandTotal =
+        order.totalAmount ||
+        order.total ||
+        (
+            subtotal +
+            shippingCharge +
+            tax -
+            discount
+        );
 
-                    <p>
-                        Unit Price :
-                        ${money(item.price)}
-                    </p>
+    orderSection.innerHTML = `
 
-                    <p>
-                        Quantity :
-                        ${item.quantity}
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="product-price">
-
-                <h4>Subtotal</h4>
-
-                <h2>${money(item.price * item.quantity)}</h2>
-
-            </div>
-
-        </div>
-
-        `;
-
-    });
-
-    orderContainer.innerHTML = `
-
-    <div class="order-card">
-
-        <!-- Header -->
+    <div class="order-card fade-up">
 
         <div class="order-header">
 
             <div>
 
-                <h2>
-
-                    Order #${order._id.slice(-8)}
-
-                </h2>
+                <h2>#${order._id.slice(-8).toUpperCase()}</h2>
 
                 <p>
 
-                    Ordered on ${formatDate(order.createdAt)}
+                    Placed on ${formatDate(order.createdAt)}
 
                 </p>
 
             </div>
 
-            <span class="order-status ${statusClass}">
+            <div class="order-status ${getStatusClass(order.orderStatus)}">
 
-                ${status}
+                ${order.orderStatus || "Pending"}
+
+            </div>
+
+        </div>
+
+        <div class="order-info">
+
+            ${renderCustomerCard(customer)}
+
+            ${renderShippingCard(shipping)}
+
+            ${renderPaymentCard(payment, grandTotal)}
+
+        </div>
+
+        <div class="order-content">
+
+            <div>
+
+                ${renderProducts(products)}
+
+            </div>
+
+            <div>
+
+                ${renderSummary({
+
+                    subtotal,
+
+                    shippingCharge,
+
+                    tax,
+
+                    discount,
+
+                    grandTotal
+
+                })}
+
+            </div>
+
+        </div>
+
+        ${renderShippingLabel(order)}
+
+        <div class="info-bar">
+
+            <i class="fas fa-circle-info"></i>
+
+            <span>
+
+                Order ID :
+                ${order._id}
 
             </span>
 
         </div>
 
-        <!-- Info -->
+    </div>
 
-        <div class="order-info">
+    `;
 
-            <!-- Customer -->
+}
+/* ==========================================
+   PART 3.1B-2
+   CUSTOMER • SHIPPING • PAYMENT CARDS
+========================================== */
 
-            <div class="info-box customer-box">
+// ==========================================
+// CUSTOMER CARD
+// ==========================================
 
-                <h3>Customer Details</h3>
+function renderCustomerCard(customer) {
+
+    return `
+
+        <div class="info-box customer-box">
+
+            <div class="info-icon">
+
+                <i class="fas fa-user"></i>
+
+            </div>
+
+            <h3>
+
+                Customer
+
+            </h3>
+
+            <p>
+
+                <strong>Name</strong>
+
+                <span>
+
+                    ${customer.name || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Email</strong>
+
+                <span>
+
+                    ${customer.email || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Phone</strong>
+
+                <span>
+
+                    ${customer.phone || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Customer ID</strong>
+
+                <span>
+
+                    ${customer._id || "-"}
+
+                </span>
+
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+// ==========================================
+// SHIPPING CARD
+// ==========================================
+
+function renderShippingCard(address) {
+
+    return `
+
+        <div class="info-box address-box">
+
+            <div class="info-icon">
+
+                <i class="fas fa-location-dot"></i>
+
+            </div>
+
+            <h3>
+
+                Shipping
+
+            </h3>
+
+            <p>
+
+                <strong>Receiver</strong>
+
+                <span>
+
+                    ${address.fullName || address.name || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Phone</strong>
+
+                <span>
+
+                    ${address.phone || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Address</strong>
+
+                <span>
+
+                    ${address.address || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>City</strong>
+
+                <span>
+
+                    ${address.city || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>State</strong>
+
+                <span>
+
+                    ${address.state || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Pincode</strong>
+
+                <span>
+
+                    ${address.postalCode || address.pincode || "-"}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Country</strong>
+
+                <span>
+
+                    ${address.country || "India"}
+
+                </span>
+
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+// ==========================================
+// PAYMENT CARD
+// ==========================================
+
+function renderPaymentCard(payment, total) {
+
+    const paymentMethod =
+        payment.method ||
+        payment.paymentMethod ||
+        "Cash on Delivery";
+
+    const paymentStatus =
+        payment.status ||
+        payment.paymentStatus ||
+        "Pending";
+
+    const transactionId =
+        payment.transactionId ||
+        payment.paymentId ||
+        "-";
+
+    return `
+
+        <div class="info-box payment-box">
+
+            <div class="info-icon">
+
+                <i class="fas fa-credit-card"></i>
+
+            </div>
+
+            <h3>
+
+                Payment
+
+            </h3>
+
+            <p>
+
+                <strong>Method</strong>
+
+                <span>
+
+                    ${paymentMethod}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Status</strong>
+
+                <span>
+
+                    ${paymentStatus}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Transaction</strong>
+
+                <span>
+
+                    ${transactionId}
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Amount</strong>
+
+                <span>
+
+                    ${formatPrice(total)}
+
+                </span>
+
+            </p>
+
+        </div>
+
+    `;
+
+}
+/* ==========================================
+   PART 3.2
+   PRODUCTS • SUMMARY • SHIPPING LABEL
+========================================== */
+
+// ==========================================
+// PRODUCTS TABLE
+// ==========================================
+
+function renderProducts(products = []) {
+
+    return `
+
+    <div class="products-card">
+
+        <div class="products-header">
+
+            <h2>
+
+                Ordered Products
+
+            </h2>
+
+            <span>
+
+                ${products.length} Item(s)
+
+            </span>
+
+        </div>
+
+        <table class="products-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Product</th>
+
+                    <th>Price</th>
+
+                    <th>Qty</th>
+
+                    <th>Subtotal</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                ${products.map(renderProductRow).join("")}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    `;
+
+}
+
+// ==========================================
+// SINGLE PRODUCT ROW
+// ==========================================
+
+function renderProductRow(item) {
+
+    const product = item.product || item;
+
+    const image = getProductImage(product);
+
+    const name =
+        product.name ||
+        product.title ||
+        "Product";
+
+    const sku =
+        product.sku ||
+        product._id ||
+        "-";
+
+    const quantity =
+        item.quantity || 1;
+
+    const price =
+        item.price ||
+        product.price ||
+        0;
+
+    const subtotal =
+        quantity * price;
+
+    return `
+
+        <tr>
+
+            <td>
+
+                <div class="product-info">
+
+                    <img
+                        src="${image}"
+                        class="product-image"
+                        alt="${name}">
+
+                    <div>
+
+                        <div class="product-name">
+
+                            ${name}
+
+                        </div>
+
+                        <div class="product-sku">
+
+                            SKU : ${sku}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+            <td class="price">
+
+                ${formatPrice(price)}
+
+            </td>
+
+            <td>
+
+                <div class="qty">
+
+                    ${quantity}
+
+                </div>
+
+            </td>
+
+            <td class="subtotal">
+
+                ${formatPrice(subtotal)}
+
+            </td>
+
+        </tr>
+
+    `;
+
+}
+
+// ==========================================
+// ORDER SUMMARY
+// ==========================================
+
+function renderSummary(summary) {
+
+    return `
+
+    <div class="summary-card">
+
+        <h2>
+
+            Order Summary
+
+        </h2>
+
+        <div class="summary-row">
+
+            <span>Subtotal</span>
+
+            <strong>
+
+                ${formatPrice(summary.subtotal)}
+
+            </strong>
+
+        </div>
+
+        <div class="summary-row">
+
+            <span>Shipping</span>
+
+            <strong>
+
+                ${formatPrice(summary.shippingCharge)}
+
+            </strong>
+
+        </div>
+
+        <div class="summary-row">
+
+            <span>Tax</span>
+
+            <strong>
+
+                ${formatPrice(summary.tax)}
+
+            </strong>
+
+        </div>
+
+        <div class="summary-row">
+
+            <span>Discount</span>
+
+            <strong>
+
+                - ${formatPrice(summary.discount)}
+
+            </strong>
+
+        </div>
+
+        <div class="summary-row total">
+
+            <span>Total</span>
+
+            <strong>
+
+                ${formatPrice(summary.grandTotal)}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+// ==========================================
+// SHIPPING LABEL
+// ==========================================
+
+function renderShippingLabel(order) {
+
+    const address =
+        order.shippingAddress || {};
+
+    const customer =
+        order.user || {};
+
+    return `
+
+    <div class="shipping-card">
+
+        <h2>
+
+            Shipping Label
+
+        </h2>
+
+        <div class="label-grid">
+
+            <div class="label-box">
+
+                <h3>
+
+                    Sender
+
+                </h3>
 
                 <p>
 
-                    <strong>Name :</strong>
-
-                    ${order.user?.name || "N/A"}
+                    <strong>Sahu Enterprises</strong>
 
                 </p>
 
                 <p>
 
-                    <strong>Email :</strong>
-
-                    ${order.user?.email || "N/A"}
+                    Bhubaneswar, Odisha
 
                 </p>
 
                 <p>
 
-                    <strong>Phone :</strong>
-
-                    ${address.phone || "N/A"}
+                    India
 
                 </p>
 
             </div>
 
-            <!-- Shipping -->
+            <div class="label-box">
 
-            <div class="info-box address-box">
+                <h3>
 
-                <h3>Shipping Address</h3>
+                    Receiver
 
-                <p>${address.fullName || ""}</p>
+                </h3>
 
-                <p>${address.phone || ""}</p>
+                <p>
 
-                <p>${address.address || ""}</p>
+                    <strong>
+
+                        ${address.fullName || customer.name || "-"}
+
+                    </strong>
+
+                </p>
+
+                <p>
+
+                    ${address.address || "-"}
+
+                </p>
 
                 <p>
 
@@ -323,183 +962,17 @@ function renderOrder(order){
 
                 </p>
 
-                <p>${address.pincode || ""}</p>
-
-                <p>${address.country || ""}</p>
-
-            </div>
-
-            <!-- Payment -->
-
-            <div class="info-box payment-box">
-
-                <h3>Payment Details</h3>
-
                 <p>
 
-                    <strong>Method :</strong>
-
-                    ${order.paymentMethod}
+                    ${address.postalCode || address.pincode || ""}
 
                 </p>
 
                 <p>
 
-                    <strong>Status :</strong>
-
-                    ${order.paymentStatus || "Pending"}
+                    ${address.phone || customer.phone || "-"}
 
                 </p>
-
-                <p>
-
-                    <strong>Transaction :</strong>
-
-                    ${order.razorpayPaymentId || "N/A"}
-
-                </p>
-
-            </div>
-
-        </div>
-
-        <!-- Products -->
-
-        <div class="products">
-
-            <h2>Ordered Products</h2>
-
-            ${productsHTML}
-
-        </div>
-
-        <!-- Summary -->
-
-        <div class="summary">
-
-            <h2>Order Summary</h2>
-
-            <div class="summary-row">
-
-                <span>Total Items</span>
-
-                <span>${order.items.length}</span>
-
-            </div>
-
-            <div class="summary-row">
-
-                <span>Shipping</span>
-
-                <span>FREE</span>
-
-            </div>
-
-            <div class="summary-row">
-
-                <span>Payment</span>
-
-                <span>${order.paymentMethod}</span>
-
-            </div>
-
-            <div class="summary-row total">
-
-                <span>Grand Total</span>
-
-                <span>${money(order.totalAmount)}</span>
-
-            </div>
-
-        </div>
-
-        <div id="shipping-label" class="shipping-label">
-
-            <h2>Shipping Label</h2>
-
-        </div>
-
-        <div class="order-actions">
-
-            <button
-                class="btn success-btn"
-                id="printLabel">
-
-                🖨 Print Label
-
-            </button>
-
-            <button
-                class="btn primary-btn"
-                id="printInvoice">
-
-                📄 Print Invoice
-
-            </button>
-
-            <a
-                href="orders.html"
-                class="back-btn">
-
-                ← Back to Orders
-
-            </a>
-
-        </div>
-
-    </div>
-
-    `;
-
-}
-// ==========================================
-// PART 3.3
-// SHIPPING LABEL + PRINT + EVENTS
-// ==========================================
-
-function updateShippingLabel(order){
-
-    const address = order.shippingAddress || {};
-
-    const label = document.getElementById("shipping-label");
-
-    if(!label) return;
-
-    label.innerHTML = `
-
-        <h2>SHIPPING LABEL</h2>
-
-        <div class="label-grid">
-
-            <div class="label-box">
-
-                <h3>FROM</h3>
-
-                <p><strong>Sahu Enterprises</strong></p>
-
-                <p>Ranchi</p>
-
-                <p>Jharkhand</p>
-
-                <p>India</p>
-
-            </div>
-
-            <div class="label-box">
-
-                <h3>TO</h3>
-
-                <p><strong>${address.fullName || ""}</strong></p>
-
-                <p>${address.phone || ""}</p>
-
-                <p>${address.address || ""}</p>
-
-                <p>${address.city || ""}, ${address.state || ""}</p>
-
-                <p>${address.pincode || ""}</p>
-
-                <p>${address.country || ""}</p>
 
             </div>
 
@@ -509,21 +982,36 @@ function updateShippingLabel(order){
 
             <span>
 
-                Order :
-                ${order._id.slice(-8)}
+                Order ID :
+                ${order._id}
 
             </span>
 
             <span>
 
-                Payment :
-                ${order.paymentMethod}
+                ${formatDate(order.createdAt)}
 
             </span>
 
         </div>
 
+    </div>
+
     `;
+
+}
+/* ==========================================
+   PART 3.3
+   PRINT • EVENTS • IMAGE FALLBACK • FINAL
+========================================== */
+
+// ==========================================
+// PRINT INVOICE
+// ==========================================
+
+function printInvoice() {
+
+    window.print();
 
 }
 
@@ -531,15 +1019,21 @@ function updateShippingLabel(order){
 // PRINT SHIPPING LABEL
 // ==========================================
 
-function printShippingLabel(){
+function printShippingLabel() {
 
-    const label = document.getElementById("shipping-label");
+    const label = document.querySelector(".shipping-card");
 
-    if(!label) return;
+    if (!label) {
 
-    const win = window.open("", "_blank");
+        alert("Shipping label not found.");
 
-    win.document.write(`
+        return;
+
+    }
+
+    const printWindow = window.open("", "_blank");
+
+    printWindow.document.write(`
 
         <html>
 
@@ -553,7 +1047,17 @@ function printShippingLabel(){
 
                     font-family:Arial,sans-serif;
 
-                    padding:30px;
+                    padding:40px;
+
+                }
+
+                .shipping-card{
+
+                    border:2px solid #000;
+
+                    padding:25px;
+
+                    border-radius:12px;
 
                 }
 
@@ -565,11 +1069,13 @@ function printShippingLabel(){
 
                     gap:25px;
 
+                    margin-top:20px;
+
                 }
 
                 .label-box{
 
-                    border:1px solid #333;
+                    border:1px solid #ddd;
 
                     padding:15px;
 
@@ -577,13 +1083,13 @@ function printShippingLabel(){
 
                 .label-footer{
 
-                    margin-top:20px;
+                    margin-top:25px;
+
+                    font-weight:bold;
 
                     display:flex;
 
                     justify-content:space-between;
-
-                    font-weight:bold;
 
                 }
 
@@ -593,7 +1099,7 @@ function printShippingLabel(){
 
         <body>
 
-            ${label.innerHTML}
+            ${label.outerHTML}
 
         </body>
 
@@ -601,63 +1107,102 @@ function printShippingLabel(){
 
     `);
 
-    win.document.close();
+    printWindow.document.close();
 
-    win.focus();
+    printWindow.focus();
 
-    win.print();
+    printWindow.print();
 
-    win.close();
+    printWindow.close();
 
 }
 
 // ==========================================
-// PRINT COMPLETE PAGE
+// IMAGE FALLBACK
 // ==========================================
 
-function printInvoice(){
+document.addEventListener("error", function (e) {
 
-    window.print();
+    if (e.target.tagName === "IMG") {
 
-}
+        e.target.src = "../../images/no-image.png";
+
+    }
+
+}, true);
 
 // ==========================================
 // BUTTON EVENTS
 // ==========================================
 
-document.addEventListener("click",(e)=>{
+document.addEventListener("click", function (e) {
 
-    if(e.target.id==="printLabel"){
+    // Print Invoice
 
-        printShippingLabel();
+    if (e.target.closest("#printInvoiceBtn")) {
+
+        printInvoice();
 
     }
 
-    if(e.target.id==="printInvoice"){
+    // Print Label
 
-        printInvoice();
+    if (e.target.closest("#printLabelBtn")) {
+
+        printShippingLabel();
 
     }
 
 });
 
 // ==========================================
-// PATCH renderOrder()
-// ==========================================
-//
-// Inside renderOrder(order),
-// after:
-//
-// orderContainer.innerHTML = `...`;
-//
-// ADD THIS LINE:
-//
-// updateShippingLabel(order);
-//
+// REFRESH ORDER (OPTIONAL)
 // ==========================================
 
+async function refreshOrder() {
+
+    try {
+
+        await fetchOrder();
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+
 // ==========================================
-// INITIAL LOAD
+// AUTO REFRESH EVERY 60 SECONDS
 // ==========================================
 
-loadOrder();
+// Uncomment if needed
+
+// setInterval(refreshOrder, 60000);
+
+// ==========================================
+// SUCCESS MESSAGE
+// ==========================================
+
+console.log(
+
+    "%cSahu Enterprises Admin",
+
+    "color:#2563eb;font-size:16px;font-weight:bold"
+
+);
+
+console.log(
+
+    "%cOrder Details Loaded Successfully",
+
+    "color:#16a34a;font-size:14px"
+
+);
+
+// ==========================================
+// END OF FILE
+// ==========================================

@@ -5,61 +5,149 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Order Details | Sahu Admin</title>
 
-    <link rel="icon" href="../../images/logo.png">
+    <link rel="icon"
+          href="../../images/logo.png">
 
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet"
+          href="../../css/style.css">
 
-    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet"
+          href="../../css/admin.css">
 
-    <link rel="stylesheet" href="../../css/admin-order-details.css">
+    <link rel="stylesheet"
+          href="../../css/admin-order-details.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
 
 <body>
 
-    <!-- ===========================
+    <!-- =========================
          SIDEBAR
-    ============================ -->
+    ========================== -->
 
     <aside class="sidebar">
 
         <div class="logo">
-            <h2>Sahu Admin</h2>
+
+            <h2>
+
+                Sahu <span>Admin</span>
+
+            </h2>
+
         </div>
 
         <ul class="menu">
 
-            <li><a href="dashboard.html">Dashboard</a></li>
+            <li>
 
-            <li><a href="products.html">Products</a></li>
+                <a href="dashboard.html">
 
-            <li><a href="orders.html" class="active">Orders</a></li>
+                    <i class="fas fa-chart-line"></i>
 
-            <li><a href="users.html">Users</a></li>
+                    Dashboard
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="products.html">
+
+                    <i class="fas fa-box"></i>
+
+                    Products
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="orders.html"
+                   class="active">
+
+                    <i class="fas fa-shopping-cart"></i>
+
+                    Orders
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="users.html">
+
+                    <i class="fas fa-users"></i>
+
+                    Users
+
+                </a>
+
+            </li>
 
         </ul>
 
+        <div class="sidebar-footer">
+
+            <img src="../../images/avatar.png"
+                 alt="Admin">
+
+            <div>
+
+                <h4>
+
+                    Admin User
+
+                </h4>
+
+                <span>
+
+                    Administrator
+
+                </span>
+
+            </div>
+
+        </div>
+
     </aside>
 
-    <!-- ===========================
+    <!-- =========================
          MAIN CONTENT
-    ============================ -->
+    ========================== -->
 
     <main class="main-content">
 
-        <!-- PAGE HEADER -->
+        <!-- HEADER -->
 
-        <section class="page-header">
+        <header class="page-header">
 
             <div class="page-left">
 
-                <a href="orders.html" class="back-btn">
+                <button
+                    class="menu-btn">
 
-                    ← Back to Orders
+                    <i class="fas fa-bars"></i>
+
+                </button>
+
+                <a href="orders.html"
+                   class="back-btn">
+
+                    <i class="fas fa-arrow-left"></i>
+
+                    Back to Orders
 
                 </a>
 
@@ -83,23 +171,33 @@
 
             <div class="page-right">
 
-                <button id="printLabelBtn" class="btn success-btn">
+                <button
+                    id="printLabelBtn"
+                    class="btn success-btn">
 
-                    🖨 Print Label
+                    <i class="fas fa-print"></i>
+
+                    Print Label
 
                 </button>
 
-                <button id="printInvoiceBtn" class="btn primary-btn">
+                <button
+                    id="printInvoiceBtn"
+                    class="btn primary-btn">
 
-                    📄 Print Invoice
+                    <i class="fas fa-file-invoice"></i>
+
+                    Print Invoice
 
                 </button>
 
             </div>
 
-        </section>
+        </header>
 
-        <!-- ORDER DETAILS -->
+        <!-- =========================
+             ORDER DETAILS
+        ========================== -->
 
         <section id="order-details">
 
@@ -115,7 +213,7 @@
 
                 <p>
 
-                    Please wait while we fetch order information.
+                    Please wait while we fetch order details.
 
                 </p>
 
@@ -125,9 +223,9 @@
 
     </main>
 
-    <!-- ===========================
+    <!-- =========================
          JAVASCRIPT
-    ============================ -->
+    ========================== -->
 
     <script src="../../js/api.js"></script>
 
