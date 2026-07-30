@@ -1,50 +1,96 @@
 /* ==========================================
-   GLOBAL / LAYOUT FIX
-   (Wrapper holding .sidebar + .admin-main
-   must be a flex container spanning full width.
-   Adjust ".admin-layout" to match your actual
-   wrapper class name if different.)
+   ADMIN ORDER DETAILS
 ========================================== */
+/* ===========================
+   ADMIN LAYOUT FIX
+=========================== */
 
-html, body{
+*{
 
     margin:0;
 
     padding:0;
 
-    width:100%;
-
-    height:100%;
+    box-sizing:border-box;
 
 }
 
-.admin-layout{
+body{
+
+    background:#f5f7fb;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+}
+
+.admin-container{
 
     display:flex;
 
     min-height:100vh;
 
-    width:100%;
+}
+
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+
+    top:0;
+
+    width:240px;
+
+    height:100vh;
+
+    overflow-y:auto;
 
 }
 
-/* ==========================================
-   ADMIN ORDER DETAILS
-========================================== */
+.main-content{
 
+    margin-left:240px;
+
+    width:calc(100% - 240px);
+
+    padding:35px;
+
+}
+
+.topbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+.topbar h1{
+
+    font-size:32px;
+
+}
 /* ===========================
    PAGE
 =========================== */
 
-.admin-main{
+.main-content{
 
-    flex:1;
+    margin-left:240px;
+
+    width:calc(100% - 240px);
+
+    min-height:100vh;
 
     padding:35px;
 
     background:#f5f7fb;
 
-    min-height:100vh;
+    box-sizing:border-box;
 
 }
 
@@ -86,8 +132,7 @@ html, body{
 
 }
 
-/* Header "back" button (use this class in the admin-header link) */
-.header-back-btn{
+.back-btn{
 
     background:var(--primary);
 
@@ -105,7 +150,7 @@ html, body{
 
 }
 
-.header-back-btn:hover{
+.back-btn:hover{
 
     opacity:.9;
 
@@ -117,13 +162,19 @@ html, body{
 
 .order-card{
 
+    width:100%;
+
+    max-width:1300px;
+
+    margin:auto;
+
     background:#fff;
 
     border-radius:16px;
 
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-
     padding:35px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
 
 }
 
@@ -249,14 +300,13 @@ html, body{
 
     display:grid;
 
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    grid-template-columns:repeat(3,1fr);
 
     gap:25px;
 
     margin:35px 0;
 
 }
-
 /* ===========================
    INFO BOX
 =========================== */
@@ -346,7 +396,9 @@ html, body{
 
 .products{
 
-    margin-top:40px;
+    margin-top:50px;
+
+    width:100%;
 
 }
 
@@ -368,19 +420,9 @@ html, body{
 
     align-items:center;
 
-    gap:20px;
+    width:100%;
 
-    background:#fff;
-
-    border:1px solid #e9ecef;
-
-    border-radius:15px;
-
-    padding:20px;
-
-    margin-bottom:20px;
-
-    transition:.3s;
+    gap:30px;
 
 }
 
@@ -476,15 +518,9 @@ html, body{
 
 .summary{
 
-    margin-top:40px;
+    width:100%;
 
-    background:#f8f9fa;
-
-    border-radius:15px;
-
-    padding:25px;
-
-    border:1px solid #eee;
+    margin-top:45px;
 
 }
 
@@ -598,8 +634,7 @@ html, body{
 
 }
 
-/* Order-actions "back" button (scoped so it no longer clashes with .header-back-btn) */
-.order-actions .back-btn{
+.back-btn{
 
     background:#6c757d;
 
@@ -607,7 +642,7 @@ html, body{
 
 }
 
-.order-actions .back-btn:hover{
+.back-btn:hover{
 
     background:#5c636a;
 
@@ -726,15 +761,9 @@ html, body{
 
 .shipping-label{
 
-    margin-top:40px;
+    width:100%;
 
-    border:2px dashed #222;
-
-    padding:30px;
-
-    border-radius:12px;
-
-    background:#fff;
+    margin-top:45px;
 
 }
 
@@ -941,6 +970,32 @@ html, body{
 =========================== */
 
 @media(max-width:992px){
+
+    .main-content{
+
+        margin-left:0;
+
+        width:100%;
+
+        padding:20px;
+
+    }
+
+    .sidebar{
+
+        position:relative;
+
+        width:100%;
+
+        height:auto;
+
+    }
+
+    .order-info{
+
+        grid-template-columns:1fr;
+
+    }
 
     .label-grid{
 
