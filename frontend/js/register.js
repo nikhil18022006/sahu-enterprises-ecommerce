@@ -3,7 +3,7 @@
 // REGISTER PAGE
 // ==========================================
 console.log("Register JS Loaded");
-import { auth } from "./firebase.js";
+import { BASE_URL } from "./api.js";
 
 import {
     createUserWithEmailAndPassword
