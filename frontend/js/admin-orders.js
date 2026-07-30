@@ -37,11 +37,9 @@ async function loadOrders() {
     try {
 
         const response = await fetch(`${BASE_URL}/orders`, {
-
             headers: {
                 Authorization: `Bearer ${token}`
             }
-
         });
 
         const data = await response.json();
@@ -49,7 +47,6 @@ async function loadOrders() {
         if (!response.ok) {
 
             alert(data.message || "Unable to load orders.");
-
             return;
 
         }
@@ -58,19 +55,55 @@ async function loadOrders() {
 
         ordersList.innerHTML = "";
 
+        if (!data.orders || data.orders.length === 0) {
+
+            ordersList.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align:center;padding:30px;">
+                        No Orders Found
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+        let html = "";
+
         data.orders.forEach(order => {
 
-            ordersList.innerHTML += `
+            const customerName = order.user?.name || "N/A";
+            const customerEmail = order.user?.email || "";
 
+            const products = (order.items || []).length
+                ? order.items.map(item => {
+
+                    const productName =
+                        item.product?.name ||
+                        item.product?.title ||
+                        "Unknown Product";
+
+                    return `${productName} × ${item.quantity}`;
+
+                }).join("<br>")
+                : `<span style="color:red;">No Products</span>`;
+
+            html += `
                 <tr>
 
-                    <td>${order._id}</td>
+                    <td>${order._id.slice(-8)}</td>
 
-                    <td>${order.user?.name || "N/A"}</td>
+                    <td>
+                        <strong>${customerName}</strong><br>
+                        <small>${customerEmail}</small>
+                    </td>
+
+                    <td>${products}</td>
 
                     <td>₹${order.totalAmount}</td>
 
-                    <td>${order.paymentMethod}</td>
+                    <td>${order.paymentMethod || "N/A"}</td>
 
                     <td>
 
@@ -97,17 +130,25 @@ async function loadOrders() {
 
                     </td>
 
+                    <td>${new Date(order.createdAt).toLocaleString()}</td>
+
                     <td>
 
-                        ${new Date(order.updatedAt).toLocaleString()}
+                        <a
+                            href="order-details.html?id=${order._id}"
+                            class="action-btn edit-btn"
+                        >
+                            View
+                        </a>
 
                     </td>
 
                 </tr>
-
             `;
 
         });
+
+        ordersList.innerHTML = html;
 
     } catch (error) {
 
@@ -181,21 +222,21 @@ async function updateStatus(orderId, orderStatus) {
 // ==========================================
 
 document.getElementById("search-order")
-.addEventListener("input", function () {
+    .addEventListener("input", function () {
 
-    const search = this.value.toLowerCase();
+        const search = this.value.toLowerCase();
 
-    document.querySelectorAll("#orders-list tr").forEach(row => {
+        document.querySelectorAll("#orders-list tr").forEach(row => {
 
-        row.style.display = row.textContent
-            .toLowerCase()
-            .includes(search)
-            ? ""
-            : "none";
+            row.style.display = row.textContent
+                .toLowerCase()
+                .includes(search)
+                ? ""
+                : "none";
+
+        });
 
     });
-
-});
 
 // ==========================================
 // PAGE LOAD
