@@ -6,12 +6,19 @@
 const orderContainer = document.getElementById("order-details");
 
 // ==========================================
-// GET ORDER ID FROM URL
+// GET ORDER ID
 // ==========================================
 
 const params = new URLSearchParams(window.location.search);
-
 const orderId = params.get("id");
+
+// ==========================================
+// CHECK ORDER ID
+// ==========================================
+
+if (!orderId) {
+    window.location.href = "orders.html";
+}
 
 // ==========================================
 // LOAD ORDER
@@ -24,71 +31,45 @@ async function loadOrder() {
         const token = localStorage.getItem("token");
 
         if (!token) {
-
-            window.location.href = "login.html";
-
+            window.location.href = "../login.html";
             return;
-
         }
 
         const response = await fetch(`${BASE_URL}/orders/${orderId}`, {
-
+            method: "GET",
             headers: {
-
                 Authorization: `Bearer ${token}`
-
             }
-
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-
             orderContainer.innerHTML = `
-
                 <div class="order-card">
-
                     <h2>Order Not Found</h2>
-
-                    <p>${data.message}</p>
-
+                    <p>${data.message || "Unable to fetch order."}</p>
                     <br>
-
                     <a href="orders.html" class="back-btn">
-
                         Back to Orders
-
                     </a>
-
                 </div>
-
             `;
-
             return;
-
         }
 
         displayOrder(data.order);
 
     }
-
     catch (error) {
-
-        console.error(error);
+        console.error("ORDER DETAILS ERROR:", error);
 
         orderContainer.innerHTML = `
-
             <div class="order-card">
-
                 <h2>Something went wrong.</h2>
-
                 <p>Please try again later.</p>
-
             </div>
-
         `;
-
     }
 
 }
@@ -100,284 +81,96 @@ async function loadOrder() {
 function displayOrder(order) {
 
     const date = new Date(order.createdAt);
-
-    const statusClass = order.orderStatus
-        .toLowerCase()
-        .replace(/\s+/g, "-");
+    const status = order.orderStatus || "Pending";
+    const statusClass = status.toLowerCase().replace(/\s+/g, "-");
+    const address = order.shippingAddress || {};
 
     let productsHTML = "";
 
-    order.items.forEach(item => {
+    (order.items || []).forEach(item => {
 
-        const product = item.product ?? {};
+        const product = item.product || {};
 
         productsHTML += `
-
-            <div class="product-item">
-
-                <div class="product-left">
-
-                    <img
-                        src="${product.images?.[0] || "../images/no-image.png"}"
-                        alt="${product.name || "Product"}">
-
-                    <div class="product-details">
-
-                        <h3>
-
-                            ${product.name || "Product"}
-
-                        </h3>
-
-                        <p>
-
-                            Quantity :
-                            ${item.quantity}
-
-                        </p>
-
-                        <p>
-
-                            ₹${item.price}
-
-                        </p>
-
-                    </div>
-
+        <div class="product-item">
+            <div class="product-left">
+                <img
+                    src="${product.images?.[0] || "../images/no-image.png"}"
+                    alt="${product.name || "Product"}">
+                <div class="product-details">
+                    <h3>${product.name || "Product"}</h3>
+                    <p>SKU : ${product._id?.slice(-6) || "N/A"}</p>
+                    <p>Unit Price : ₹${item.price}</p>
+                    <p>Quantity : ${item.quantity}</p>
                 </div>
-
-                <div class="product-price">
-
-                    <h3>
-
-                        ₹${item.price * item.quantity}
-
-                    </h3>
-
-                </div>
-
             </div>
-
+            <div class="product-price">
+                <h4>Subtotal</h4>
+                <h2>₹${item.price * item.quantity}</h2>
+            </div>
+        </div>
         `;
 
     });
 
+    const totalAmount = (order.items || []).reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+    );
+
     orderContainer.innerHTML = `
+        <div class="order-card">
 
-<div class="order-card">
+            <div class="order-header">
+                <h2>Order #${order._id?.slice(-8) || "N/A"}</h2>
+                <span class="status-badge status-${statusClass}">${status}</span>
+            </div>
 
-    <div class="order-header">
-
-        <div>
-
-            <h2>
-
-                Order #${order._id.slice(-8)}
-
-            </h2>
-
-            <p>
-
-                Ordered on :
-                ${date.toLocaleDateString("en-IN")}
-
+            <p class="order-date">
+                Placed on : ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
             </p>
+
+            <div class="shipping-address">
+                <h3>Shipping Address</h3>
+                <p>${address.fullName || ""}</p>
+                <p>${address.addressLine || ""}</p>
+                <p>${address.city || ""}, ${address.state || ""} - ${address.pincode || ""}</p>
+                <p>Phone : ${address.phone || "N/A"}</p>
+            </div>
+
+            <div class="products-list">
+                ${productsHTML}
+            </div>
+
+            <div class="order-total">
+                <h3>Total Amount</h3>
+                <h2>₹${totalAmount}</h2>
+            </div>
+
+            <div class="order-actions">
+                <button class="track-btn" onclick="printInvoice()">
+                    Print Invoice
+                </button>
+                <a href="orders.html" class="back-btn">
+                    Back to Orders
+                </a>
+            </div>
 
         </div>
-
-        <span class="order-status ${statusClass}">
-
-            ${order.orderStatus}
-
-        </span>
-
-    </div>
-
-    <div class="order-info">
-
-        <div class="info-box">
-
-            <h3>
-
-                Shipping Address
-
-            </h3>
-
-            <p>
-
-                ${order.shippingAddress.fullName}
-
-            </p>
-
-            <p>
-
-                ${order.shippingAddress.phone}
-
-            </p>
-
-            <p>
-
-                ${order.shippingAddress.address}
-
-            </p>
-
-            <p>
-
-                ${order.shippingAddress.city},
-                ${order.shippingAddress.state}
-
-            </p>
-
-            <p>
-
-                ${order.shippingAddress.pincode}
-
-            </p>
-
-            <p>
-
-                ${order.shippingAddress.country}
-
-            </p>
-
-        </div>
-
-        <div class="info-box">
-
-            <h3>
-
-                Payment Details
-
-            </h3>
-
-            <p>
-
-                <strong>Method</strong>
-
-            </p>
-
-            <p>
-
-                ${order.paymentMethod}
-
-            </p>
-
-            <br>
-
-            <p>
-
-                <strong>Status</strong>
-
-            </p>
-
-            <p>
-
-                ${order.paymentStatus}
-
-            </p>
-
-        </div>
-
-    </div>
-
-    <div class="products">
-
-        <h2>
-
-            Ordered Products
-
-        </h2>
-
-        ${productsHTML}
-
-    </div>
-
-    <div class="summary">
-
-        <div class="summary-row">
-
-            <span>
-
-                Subtotal
-
-            </span>
-
-            <span>
-
-                ₹${order.totalAmount}
-
-            </span>
-
-        </div>
-
-        <div class="summary-row">
-
-            <span>
-
-                Shipping
-
-            </span>
-
-            <span>
-
-                FREE
-
-            </span>
-
-        </div>
-
-        <div class="summary-row">
-
-            <span>
-
-                GST
-
-            </span>
-
-            <span>
-
-                Included
-
-            </span>
-
-        </div>
-
-        <div class="summary-row total">
-
-            <span>
-
-                Total
-
-            </span>
-
-            <span>
-
-                ₹${order.totalAmount}
-
-            </span>
-
-        </div>
-
-    </div>
-
-    <div class="order-actions">
-
-        <a
-            href="orders.html"
-            class="back-btn">
-
-            Back to Orders
-
-        </a>
-
-    </div>
-
-</div>
-
-`;
+    `;
 
 }
 
+// ==========================================
+// PRINT INVOICE
+// ==========================================
+
+function printInvoice() {
+    window.print();
+}
+
+// ==========================================
+// PAGE LOAD
 // ==========================================
 
 loadOrder();
