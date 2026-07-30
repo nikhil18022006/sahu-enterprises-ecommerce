@@ -76,6 +76,8 @@ body{
 
     z-index:999;
 
+    transition:transform .3s ease;
+
 }
 
 /* Logo */
@@ -211,6 +213,30 @@ body{
     color:#9ca3af;
 
     font-size:14px;
+
+}
+
+/* ==========================================
+   SIDEBAR OVERLAY (mobile)
+========================================== */
+
+.sidebar-overlay{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    z-index:998;
+
+}
+
+.sidebar-overlay.show{
+
+    display:block;
 
 }
 
@@ -1438,6 +1464,8 @@ body{
 
     .sidebar,
 
+    .sidebar-overlay,
+
     .page-header,
 
     .order-actions,
@@ -1509,6 +1537,12 @@ body{
     .sidebar{
 
         transform:translateX(-100%);
+
+    }
+
+    .sidebar.show{
+
+        transform:translateX(0);
 
     }
 

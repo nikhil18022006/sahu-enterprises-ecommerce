@@ -216,7 +216,14 @@ async function fetchOrder() {
 
         }
 
-        renderOrder(data);
+        // FIX: the API responds with { success, order: {...} }.
+        // Previously this passed the whole response body into
+        // renderOrder(), so order.user / order.shippingAddress /
+        // order.payment / order.items were all undefined and
+        // order._id.slice(...) threw. Fall back to `data` only if
+        // the backend ever responds with the order at the top level.
+
+        renderOrder(data.order || data);
 
     }
 
@@ -227,6 +234,42 @@ async function fetchOrder() {
         showError(error.message);
 
     }
+
+}
+
+// ==========================================
+// SIDEBAR TOGGLE (mobile)
+// ==========================================
+
+function toggleSidebar() {
+
+    const sidebar = document.querySelector(".sidebar");
+
+    let overlay = document.querySelector(".sidebar-overlay");
+
+    if (!overlay) {
+
+        overlay = document.createElement("div");
+
+        overlay.className = "sidebar-overlay";
+
+        overlay.addEventListener("click", closeSidebar);
+
+        document.body.appendChild(overlay);
+
+    }
+
+    sidebar.classList.toggle("show");
+
+    overlay.classList.toggle("show");
+
+}
+
+function closeSidebar() {
+
+    document.querySelector(".sidebar")?.classList.remove("show");
+
+    document.querySelector(".sidebar-overlay")?.classList.remove("show");
 
 }
 
@@ -918,7 +961,7 @@ function renderShippingLabel(order) {
 
                 <p>
 
-                    Bhubaneswar, Odisha
+                    Ranchi, Jharkhand
 
                 </p>
 
@@ -1150,6 +1193,14 @@ document.addEventListener("click", function (e) {
     if (e.target.closest("#printLabelBtn")) {
 
         printShippingLabel();
+
+    }
+
+    // Mobile sidebar toggle
+
+    if (e.target.closest(".menu-btn")) {
+
+        toggleSidebar();
 
     }
 
