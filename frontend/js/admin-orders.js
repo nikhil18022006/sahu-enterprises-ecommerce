@@ -1,0 +1,178 @@
+// ==========================================
+// SAHU ENTERPRISES
+// ADMIN ORDERS
+// ==========================================
+const user = JSON.parse(localStorage.getItem("user"));
+
+if (!user || user.role !== "admin") {
+
+    alert("Access Denied");
+
+    window.location.href = "../login.html";
+
+}
+const BASE_URL = "http://localhost:5000/api";
+const token = localStorage.getItem("token");
+
+// ==========================================
+// CHECK LOGIN
+// ==========================================
+
+if (!token) {
+    alert("Please login first.");
+    window.location.href = "../login.html";
+}
+
+// ==========================================
+// LOAD ORDERS
+// ==========================================
+
+async function loadOrders() {
+
+    try {
+
+        const response = await fetch(`${BASE_URL}/orders`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        const ordersList = document.getElementById("orders-list");
+
+        ordersList.innerHTML = "";
+
+        data.orders.forEach(order => {
+
+            ordersList.innerHTML += `
+                <tr>
+
+                    <td>${order._id}</td>
+
+                    <td>${order.user?.name || "N/A"}</td>
+
+                    <td>₹${order.totalAmount}</td>
+
+                    <td>${order.paymentMethod}</td>
+
+                    <td>
+
+    <select
+        class="status-select"
+        onchange="updateStatus(this.value,'${order._id}')"
+    >
+
+        <option value="Pending" ${order.orderStatus === "Pending" ? "selected" : ""}>Pending</option>
+
+        <option value="Confirmed" ${order.orderStatus === "Confirmed" ? "selected" : ""}>Confirmed</option>
+
+        <option value="Packed" ${order.orderStatus === "Packed" ? "selected" : ""}>Packed</option>
+
+        <option value="Shipped" ${order.orderStatus === "Shipped" ? "selected" : ""}>Shipped</option>
+
+        <option value="Out for Delivery" ${order.orderStatus === "Out for Delivery" ? "selected" : ""}>Out for Delivery</option>
+
+        <option value="Delivered" ${order.orderStatus === "Delivered" ? "selected" : ""}>Delivered</option>
+
+        <option value="Cancelled" ${order.orderStatus === "Cancelled" ? "selected" : ""}>Cancelled</option>
+
+    </select>
+
+</td>
+
+<td>
+
+    Updated Automatically
+
+</td>
+
+                </tr>
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Unable to load orders.");
+
+    }
+
+}
+
+// ==========================================
+// UPDATE STATUS
+// ==========================================
+
+async function updateStatus(orderStatus, orderId) {
+
+    try {
+
+        const response = await fetch(
+            `${BASE_URL}/orders/${orderId}/status`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+
+                body: JSON.stringify({
+                    orderStatus
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            alert(data.message);
+
+            return;
+
+        }
+
+        loadOrders();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to update order.");
+
+    }
+
+}
+
+// ==========================================
+// SEARCH
+// ==========================================
+
+document
+    .getElementById("search-order")
+    .addEventListener("input", function () {
+
+        const search = this.value.toLowerCase();
+
+        const rows = document.querySelectorAll("#orders-list tr");
+
+        rows.forEach(row => {
+
+            row.style.display = row.textContent
+                .toLowerCase()
+                .includes(search)
+                ? ""
+                : "none";
+
+        });
+
+    });
+
+// ==========================================
+// PAGE LOAD
+// ==========================================
+
+loadOrders();

@@ -283,6 +283,35 @@ const deleteUser = async (req, res) => {
 
     }
 };
+const Order = require("../models/Order");
+
+// =======================================
+// Get Logged-in User Orders
+// =======================================
+exports.getMyOrders = async (req, res) => {
+    try {
+
+        const orders = await Order.find({
+            user: req.user.id
+        })
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            orders
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch orders"
+        });
+
+    }
+};
 
 module.exports = {
     registerUser,

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product | Sahu Enterprises</title>
+
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/admin-dashboard.css">
+
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <h2>Sahu Admin</h2>
+
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="dashboard.html">Dashboard</a>
+            </li>
+
+            <li>
+                <a href="products.html" class="active">Products</a>
+            </li>
+
+            <li>
+                <a href="orders.html">Orders</a>
+            </li>
+
+            <li>
+                <a href="users.html">Users</a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <h1>Edit Product</h1>
+
+            <button onclick="window.location.href='products.html'">
+
+                ← Back
+
+            </button>
+
+        </header>
+
+        <form id="edit-product-form">
+
+            <div class="form-group">
+
+                <label>Product Name</label>
+
+                <input type="text" id="name" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <textarea id="description" rows="5" required></textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Category</label>
+
+                <input type="text" id="category" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Price</label>
+
+                <input type="number" id="price" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Stock</label>
+
+                <input type="number" id="stock" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Image URL</label>
+
+                <input type="text" id="image" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+
+                    <input type="checkbox" id="featured">
+
+                    Featured Product
+
+                </label>
+
+            </div>
+
+            <button class="submit-btn" type="submit">
+
+                Update Product
+
+            </button>
+
+        </form>
+
+    </main>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/admin-edit-product.js"></script>
+
+</body>
+
+</html>

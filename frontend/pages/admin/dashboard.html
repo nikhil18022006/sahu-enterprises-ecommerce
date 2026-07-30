@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Sahu Enterprises</title>
+
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/admin-dashboard.css">
+
+</head>
+
+<body>
+
+    <!-- ===========================
+            SIDEBAR
+    ============================ -->
+
+    <div id="admin-sidebar"></div>
+
+    <!-- ===========================
+            MAIN CONTENT
+    ============================ -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <h1>Dashboard</h1>
+
+            <button id="logout-btn">
+
+                Logout
+
+            </button>
+
+        </header>
+
+        <!-- DASHBOARD CARDS -->
+
+        <section class="cards">
+
+            <div class="card">
+
+                <h3>Total Users</h3>
+
+                <h2 id="total-users">
+
+                    0
+
+                </h2>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Total Products</h3>
+
+                <h2 id="total-products">
+
+                    0
+
+                </h2>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Total Orders</h3>
+
+                <h2 id="total-orders">
+
+                    0
+
+                </h2>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Total Revenue</h3>
+
+                <h2 id="total-revenue">
+
+                    ₹0
+
+                </h2>
+
+            </div>
+
+        </section>
+
+        <!-- RECENT ORDERS -->
+
+        <section class="recent-orders">
+
+            <h2>
+
+                Recent Orders
+
+            </h2>
+
+            <div id="recent-orders">
+
+                No Orders Yet
+
+            </div>
+
+        </section>
+
+    </main>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/admin-dashboard.js"></script>
+
+</body>
+
+</html>

@@ -28,6 +28,7 @@ const placeOrder = async (req, res) => {
         }
 
         const order = await Order.create({
+
             user: userId,
 
             items: cart.items.map((item) => ({
@@ -40,7 +41,14 @@ const placeOrder = async (req, res) => {
 
             paymentMethod: req.body.paymentMethod,
 
-            totalAmount
+            totalAmount,
+
+            statusHistory: [
+                {
+                    status: "Pending"
+                }
+            ]
+
         });
 
         // Clear cart
@@ -178,29 +186,35 @@ const getAllOrders = async (req, res) => {
 // Update Order Status (Admin)
 // ===============================
 const updateOrderStatus = async (req, res) => {
+
     try {
 
-        const orderId = req.params.id;
+        const { id } = req.params;
+        const { orderStatus } = req.body;
 
-        const order = await Order.findById(orderId);
+        const order = await Order.findById(id);
 
         // Check if order exists
         if (!order) {
+
             return res.status(404).json({
                 success: false,
                 message: "Order not found"
             });
+
         }
 
         // Update order status
-        order.orderStatus = req.body.orderStatus;
+        order.orderStatus = orderStatus;
 
         await order.save();
 
         return res.status(200).json({
+
             success: true,
             message: "Order status updated successfully",
             order
+
         });
 
     } catch (error) {
@@ -208,13 +222,15 @@ const updateOrderStatus = async (req, res) => {
         console.error("UPDATE ORDER STATUS ERROR:", error);
 
         return res.status(500).json({
+
             success: false,
             message: error.message
+
         });
 
     }
-};
 
+};
 module.exports = {
     placeOrder,
     getMyOrders,

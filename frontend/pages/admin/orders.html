@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Orders | Sahu Enterprises</title>
+
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/admin-dashboard.css">
+
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>Sahu Admin</h2>
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="dashboard.html">Dashboard</a>
+            </li>
+
+            <li>
+                <a href="products.html">Products</a>
+            </li>
+
+            <li>
+                <a href="orders.html" class="active">Orders</a>
+            </li>
+
+            <li>
+                <a href="users.html">Users</a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <h1>Manage Orders</h1>
+
+        </header>
+
+        <div class="search-box">
+
+            <input type="text" id="search-order" placeholder="Search orders...">
+
+        </div>
+
+        <div class="table-container">
+
+            <table class="product-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Order ID</th>
+
+                        <th>Customer</th>
+
+                        <th>Total</th>
+
+                        <th>Payment</th>
+
+                        <th>Status</th>
+
+                        <th>Date</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="orders-list">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/admin-orders.js"></script>
+    <script src="../js/orders.js"></script>
+
+</body>
+
+</html>
