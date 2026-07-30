@@ -1,4 +1,34 @@
 /* ==========================================
+   GLOBAL / LAYOUT FIX
+   (Wrapper holding .sidebar + .admin-main
+   must be a flex container spanning full width.
+   Adjust ".admin-layout" to match your actual
+   wrapper class name if different.)
+========================================== */
+
+html, body{
+
+    margin:0;
+
+    padding:0;
+
+    width:100%;
+
+    height:100%;
+
+}
+
+.admin-layout{
+
+    display:flex;
+
+    min-height:100vh;
+
+    width:100%;
+
+}
+
+/* ==========================================
    ADMIN ORDER DETAILS
 ========================================== */
 
@@ -56,7 +86,8 @@
 
 }
 
-.back-btn{
+/* Header "back" button (use this class in the admin-header link) */
+.header-back-btn{
 
     background:var(--primary);
 
@@ -74,7 +105,7 @@
 
 }
 
-.back-btn:hover{
+.header-back-btn:hover{
 
     opacity:.9;
 
@@ -567,7 +598,8 @@
 
 }
 
-.back-btn{
+/* Order-actions "back" button (scoped so it no longer clashes with .header-back-btn) */
+.order-actions .back-btn{
 
     background:#6c757d;
 
@@ -575,7 +607,7 @@
 
 }
 
-.back-btn:hover{
+.order-actions .back-btn:hover{
 
     background:#5c636a;
 
