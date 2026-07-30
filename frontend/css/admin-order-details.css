@@ -107,17 +107,12 @@ body{
 =========================== */
 
 .order-card{
-
     width:100%;
-
+    max-width:none;
     background:#fff;
-
     border-radius:18px;
-
     padding:35px;
-
     box-shadow:0 8px 25px rgba(0,0,0,.08);
-
 }
 
 /* ===========================
@@ -419,9 +414,8 @@ body{
 =========================== */
 
 .products{
-
+    width:100%;
     margin-top:50px;
-
 }
 
 .products h2{
@@ -557,17 +551,12 @@ body{
 =========================== */
 
 .summary{
-
+    width:100%;
     margin-top:45px;
-
     background:#fff;
-
     border-radius:16px;
-
     border:1px solid #e5e7eb;
-
     padding:30px;
-
 }
 
 .summary h2{
@@ -667,17 +656,12 @@ body{
 =========================== */
 
 .shipping-label{
-
+    width:100%;
     margin-top:50px;
-
     background:#fff;
-
     border:2px dashed #222;
-
     border-radius:18px;
-
     padding:30px;
-
 }
 
 .shipping-label h2{
