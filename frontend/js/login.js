@@ -2,7 +2,7 @@
 // SAHU ENTERPRISES
 // LOGIN PAGE
 // ==========================================
-
+import { BASE_URL } from "./api.js";
 const loginBtn = document.getElementById("login-btn");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
