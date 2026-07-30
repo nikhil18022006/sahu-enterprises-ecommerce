@@ -65,20 +65,3 @@ loginBtn.addEventListener("click", async () => {
     }
 
 });
-const user = await User.findOne({ email });
-
-console.log("Login Email:", email);
-console.log("User Found:", user ? "YES" : "NO");
-
-if (!user) {
-    return res.status(400).json({
-        success: false,
-        message: "Invalid Email or Password"
-    });
-}
-
-console.log("Stored Hash:", user.password);
-
-const isMatch = await bcrypt.compare(password, user.password);
-
-console.log("Password Match:", isMatch);

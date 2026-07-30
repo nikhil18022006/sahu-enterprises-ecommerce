@@ -52,7 +52,7 @@ const registerUser = async (req, res) => {
     }
 };
 
-// ===============================
+/// ===============================
 // Login User
 // ===============================
 const loginUser = async (req, res) => {
@@ -60,7 +60,11 @@ const loginUser = async (req, res) => {
 
         const { email, password } = req.body;
 
+        console.log("Login Email:", email);
+
         const user = await User.findOne({ email });
+
+        console.log("User Found:", user ? "YES" : "NO");
 
         if (!user) {
             return res.status(400).json({
@@ -69,7 +73,11 @@ const loginUser = async (req, res) => {
             });
         }
 
+        console.log("Stored Hash:", user.password);
+
         const isMatch = await bcrypt.compare(password, user.password);
+
+        console.log("Password Match:", isMatch);
 
         if (!isMatch) {
             return res.status(400).json({
@@ -112,7 +120,6 @@ const loginUser = async (req, res) => {
 
     }
 };
-
 // ===============================
 // Get Profile
 // ===============================
