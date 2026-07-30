@@ -5,7 +5,7 @@
 
 console.log("Register JS Loaded");
 
-import { BASE_URL } from "./api.js";
+
 
 // ==========================================
 // SELECT ELEMENTS
