@@ -2,12 +2,10 @@
 // SAHU ENTERPRISES
 // REGISTER PAGE
 // ==========================================
-console.log("Register JS Loaded");
-import { BASE_URL } from "./api.js";
 
-import {
-    createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+console.log("Register JS Loaded");
+
+import { BASE_URL } from "./api.js";
 
 // ==========================================
 // SELECT ELEMENTS
@@ -28,7 +26,34 @@ const terms = document.getElementById("terms");
 
 registerBtn.addEventListener("click", async () => {
 
-    // ...your validation...
+    const name = fullName.value.trim();
+    const emailValue = email.value.trim();
+    const phoneValue = phone.value.trim();
+    const passwordValue = password.value.trim();
+    const confirmPasswordValue = confirmPassword.value.trim();
+
+    // Validation
+
+    if (
+        !name ||
+        !emailValue ||
+        !phoneValue ||
+        !passwordValue ||
+        !confirmPasswordValue
+    ) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    if (!terms.checked) {
+        alert("Please accept Terms & Conditions.");
+        return;
+    }
+
+    if (passwordValue !== confirmPasswordValue) {
+        alert("Passwords do not match.");
+        return;
+    }
 
     try {
 
@@ -56,8 +81,10 @@ registerBtn.addEventListener("click", async () => {
         window.location.href = "login.html";
 
     } catch (error) {
+
         console.error(error);
         alert("Registration Failed");
+
     }
 
 });
