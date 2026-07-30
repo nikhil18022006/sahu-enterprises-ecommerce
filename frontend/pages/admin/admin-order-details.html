@@ -7,13 +7,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Order Details | Admin Panel</title>
+    <title>Order Details | Sahu Admin</title>
 
     <link rel="icon" href="../../images/logo.png">
 
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/admin.css">
     <link rel="stylesheet" href="../../css/admin-order-details.css">
+
 </head>
 
 <body>
@@ -26,96 +27,109 @@
 
         <!-- Sidebar -->
 
-<aside class="sidebar">
+        <aside class="sidebar">
 
-    <div class="logo">
+            <div class="logo">
 
-        <h2>Sahu Admin</h2>
+                <h2>Sahu Admin</h2>
+
+            </div>
+
+            <ul class="menu">
+
+                <li>
+
+                    <a href="dashboard.html">
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="products.html">
+
+                        Products
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="orders.html"
+                        class="active">
+
+                        Orders
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="users.html">
+
+                        Users
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </aside>
+
+        <!-- ===========================
+             MAIN CONTENT
+        ============================ -->
+
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <h1>
+
+                    Order Details
+
+                </h1>
+
+            </header>
+
+            <section id="order-details">
+
+                <div class="loading">
+
+                    <h2>
+
+                        Loading Order...
+
+                    </h2>
+
+                    <p>
+
+                        Please wait while we fetch the order.
+
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
 
     </div>
 
-    <ul class="menu">
+    <!-- ===========================
+         JAVASCRIPT
+    ============================ -->
 
-        <li>
+    <script src="../../js/api.js"></script>
 
-            <a href="dashboard.html">
+    <script src="../../js/admin-order-details.js"></script>
 
-                Dashboard
+</body>
 
-            </a>
-
-        </li>
-
-        <li>
-
-            <a href="products.html">
-
-                Products
-
-            </a>
-
-        </li>
-
-        <li>
-
-            <a href="orders.html" class="active">
-
-                Orders
-
-            </a>
-
-        </li>
-
-        <li>
-
-            <a href="users.html">
-
-                Users
-
-            </a>
-
-        </li>
-
-    </ul>
-
-</aside>
-
-<!-- Main -->
-
-<main class="main-content">
-
-    <header class="topbar">
-
-        <h1>
-
-            Order Details
-
-        </h1>
-
-    </header>
-
-    <section id="order-details">
-
-        <div class="loading">
-
-            <h2>
-
-                Loading Order...
-
-            </h2>
-
-            <p>
-
-                Please wait...
-
-            </p>
-
-        </div>
-
-    </section>
-
-</main>
-
-<script src="../../js/api.js"></script>
-
-<script src="../../js/admin-order-details.js"></script>
+</html>
