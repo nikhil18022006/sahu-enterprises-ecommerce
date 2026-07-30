@@ -1,6 +1,6 @@
 // ==========================================
 // SAHU ENTERPRISES
-// ADMIN ORDERS
+// EDIT PRODUCT
 // ==========================================
 const user = JSON.parse(localStorage.getItem("user"));
 
@@ -12,6 +12,7 @@ if (!user || user.role !== "admin") {
 
 }
 const BASE_URL = "http://localhost:5000/api";
+
 const token = localStorage.getItem("token");
 
 // ==========================================
@@ -19,111 +20,110 @@ const token = localStorage.getItem("token");
 // ==========================================
 
 if (!token) {
+
     alert("Please login first.");
+
     window.location.href = "../login.html";
+
 }
 
 // ==========================================
-// LOAD ORDERS
+// GET PRODUCT ID FROM URL
 // ==========================================
 
-async function loadOrders() {
+const params = new URLSearchParams(window.location.search);
+
+const productId = params.get("id");
+
+// ==========================================
+// LOAD PRODUCT
+// ==========================================
+
+async function loadProduct() {
 
     try {
 
-        const response = await fetch(`${BASE_URL}/orders`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await fetch(`${BASE_URL}/products/${productId}`);
 
         const data = await response.json();
 
-        const ordersList = document.getElementById("orders-list");
+        const product = data.product;
 
-        ordersList.innerHTML = "";
+        document.getElementById("name").value = product.name;
 
-        data.orders.forEach(order => {
+        document.getElementById("description").value = product.description;
 
-            ordersList.innerHTML += `
-                <tr>
+        document.getElementById("category").value = product.category;
 
-                    <td>${order._id}</td>
+        document.getElementById("price").value = product.price;
 
-                    <td>${order.user?.name || "N/A"}</td>
+        document.getElementById("stock").value = product.stock;
 
-                    <td>₹${order.totalAmount}</td>
+        document.getElementById("image").value = product.images[0];
 
-                    <td>${order.paymentMethod}</td>
-
-                    <td>
-
-    <select
-        class="status-select"
-        onchange="updateStatus(this.value,'${order._id}')"
-    >
-
-        <option value="Pending" ${order.orderStatus === "Pending" ? "selected" : ""}>Pending</option>
-
-        <option value="Confirmed" ${order.orderStatus === "Confirmed" ? "selected" : ""}>Confirmed</option>
-
-        <option value="Packed" ${order.orderStatus === "Packed" ? "selected" : ""}>Packed</option>
-
-        <option value="Shipped" ${order.orderStatus === "Shipped" ? "selected" : ""}>Shipped</option>
-
-        <option value="Out for Delivery" ${order.orderStatus === "Out for Delivery" ? "selected" : ""}>Out for Delivery</option>
-
-        <option value="Delivered" ${order.orderStatus === "Delivered" ? "selected" : ""}>Delivered</option>
-
-        <option value="Cancelled" ${order.orderStatus === "Cancelled" ? "selected" : ""}>Cancelled</option>
-
-    </select>
-
-</td>
-
-<td>
-
-    Updated Automatically
-
-</td>
-
-                </tr>
-            `;
-
-        });
+        document.getElementById("featured").checked = product.isFeatured;
 
     } catch (error) {
 
         console.error(error);
-        alert("Unable to load orders.");
+
+        alert("Unable to load product.");
 
     }
 
 }
 
 // ==========================================
-// UPDATE STATUS
+// UPDATE PRODUCT
 // ==========================================
 
-async function updateStatus(orderStatus, orderId) {
+document
+.getElementById("edit-product-form")
+.addEventListener("submit", async function (e) {
+
+    e.preventDefault();
+
+    const product = {
+
+        name: document.getElementById("name").value,
+
+        description: document.getElementById("description").value,
+
+        category: document.getElementById("category").value,
+
+        price: Number(document.getElementById("price").value),
+
+        stock: Number(document.getElementById("stock").value),
+
+        images: [
+
+            document.getElementById("image").value
+
+        ],
+
+        isFeatured: document.getElementById("featured").checked,
+
+        isActive: true
+
+    };
 
     try {
 
-        const response = await fetch(
-            `${BASE_URL}/orders/${orderId}/status`,
-            {
-                method: "PUT",
+        const response = await fetch(`${BASE_URL}/products/${productId}`, {
 
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
+            method: "PUT",
 
-                body: JSON.stringify({
-                    orderStatus
-                })
-            }
-        );
+            headers: {
+
+                "Content-Type": "application/json",
+
+                Authorization: `Bearer ${token}`
+
+            },
+
+            body: JSON.stringify(product)
+
+        });
 
         const data = await response.json();
 
@@ -135,44 +135,22 @@ async function updateStatus(orderStatus, orderId) {
 
         }
 
-        loadOrders();
+        alert("Product Updated Successfully!");
+
+        window.location.href = "products.html";
 
     } catch (error) {
 
         console.error(error);
 
-        alert("Unable to update order.");
+        alert("Unable to update product.");
 
     }
 
-}
-
-// ==========================================
-// SEARCH
-// ==========================================
-
-document
-    .getElementById("search-order")
-    .addEventListener("input", function () {
-
-        const search = this.value.toLowerCase();
-
-        const rows = document.querySelectorAll("#orders-list tr");
-
-        rows.forEach(row => {
-
-            row.style.display = row.textContent
-                .toLowerCase()
-                .includes(search)
-                ? ""
-                : "none";
-
-        });
-
-    });
+});
 
 // ==========================================
 // PAGE LOAD
 // ==========================================
 
-loadOrders();
+loadProduct();

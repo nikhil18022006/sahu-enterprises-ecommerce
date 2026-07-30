@@ -2,26 +2,27 @@
 // SAHU ENTERPRISES
 // ADMIN PRODUCTS
 // ==========================================
+
+const BASE_URL = "https://sahu-enterprises-ecommerce.onrender.com/api";
+
+const token = localStorage.getItem("token");
 const user = JSON.parse(localStorage.getItem("user"));
 
-if (!user || user.role !== "admin") {
+// ==========================================
+// CHECK LOGIN
+// ==========================================
 
-    alert("Access Denied");
+if (!token || !user) {
+
+    alert("Please login first.");
 
     window.location.href = "../login.html";
 
 }
-const BASE_URL = "http://localhost:5000/api";
 
-const token = localStorage.getItem("token");
+if (user.role !== "admin") {
 
-// ==========================================
-// CHECK ADMIN LOGIN
-// ==========================================
-
-if (!token) {
-
-    alert("Please login first.");
+    alert("Access Denied");
 
     window.location.href = "../login.html";
 
@@ -39,6 +40,14 @@ async function loadProducts() {
 
         const data = await response.json();
 
+        if (!response.ok) {
+
+            alert(data.message || "Unable to load products.");
+
+            return;
+
+        }
+
         const productList = document.getElementById("product-list");
 
         productList.innerHTML = "";
@@ -52,7 +61,7 @@ async function loadProducts() {
                     <td>
 
                         <img
-                            src="${product.images[0]}"
+                            src="${product.images?.[0] || "../images/no-image.png"}"
                             class="product-image"
                             alt="${product.name}"
                         >
@@ -71,16 +80,18 @@ async function loadProducts() {
 
                         <button
                             class="action-btn edit-btn"
-                            onclick="editProduct('${product._id}')"
-                        >
+                            onclick="editProduct('${product._id}')">
+
                             Edit
+
                         </button>
 
                         <button
                             class="action-btn delete-btn"
-                            onclick="deleteProduct('${product._id}')"
-                        >
+                            onclick="deleteProduct('${product._id}')">
+
                             Delete
+
                         </button>
 
                     </td>
@@ -93,7 +104,7 @@ async function loadProducts() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Load Products Error:", error);
 
         alert("Unable to load products.");
 
@@ -117,11 +128,7 @@ function editProduct(id) {
 
 async function deleteProduct(id) {
 
-    const confirmDelete = confirm(
-        "Are you sure you want to delete this product?"
-    );
-
-    if (!confirmDelete) {
+    if (!confirm("Are you sure you want to delete this product?")) {
 
         return;
 
@@ -135,7 +142,7 @@ async function deleteProduct(id) {
 
             headers: {
 
-                Authorization: `Bearer ${token}`
+                "Authorization": `Bearer ${token}`
 
             }
 
@@ -153,7 +160,7 @@ async function deleteProduct(id) {
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Delete Product Error:", error);
 
         alert("Unable to delete product.");
 
@@ -165,31 +172,20 @@ async function deleteProduct(id) {
 // SEARCH PRODUCTS
 // ==========================================
 
-document.getElementById("search-input")
-.addEventListener("input", function () {
+document.getElementById("search-input").addEventListener("input", function () {
 
     const search = this.value.toLowerCase();
 
-    const rows = document.querySelectorAll("#product-list tr");
-
-    rows.forEach(row => {
+    document.querySelectorAll("#product-list tr").forEach(row => {
 
         const name = row.children[1].textContent.toLowerCase();
 
         const category = row.children[2].textContent.toLowerCase();
 
-        if (
-            name.includes(search) ||
-            category.includes(search)
-        ) {
-
-            row.style.display = "";
-
-        } else {
-
-            row.style.display = "none";
-
-        }
+        row.style.display =
+            name.includes(search) || category.includes(search)
+                ? ""
+                : "none";
 
     });
 

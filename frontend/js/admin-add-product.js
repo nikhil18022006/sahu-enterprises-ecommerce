@@ -2,32 +2,34 @@
 // SAHU ENTERPRISES
 // ADD PRODUCT
 // ==========================================
-const user = JSON.parse(localStorage.getItem("user"));
 
-if (!user || user.role !== "admin") {
-
-    alert("Access Denied");
-
-    window.location.href = "../login.html";
-
-}
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://sahu-enterprises-ecommerce.onrender.com/api";
 
 const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user"));
 
 // ==========================================
 // CHECK LOGIN
 // ==========================================
 
-if (!token) {
+if (!token || !user) {
 
     alert("Please login first.");
 
     window.location.href = "../login.html";
 
 }
+
+if (user.role !== "admin") {
+
+    alert("Access Denied");
+
+    window.location.href = "../login.html";
+
+}
+
 // ==========================================
-// MULTIPLE IMAGE PREVIEW
+// IMAGE PREVIEW
 // ==========================================
 
 const imageInput = document.getElementById("images");
@@ -67,6 +69,7 @@ imageInput.addEventListener("change", function () {
     });
 
 });
+
 // ==========================================
 // ADD PRODUCT
 // ==========================================
@@ -77,17 +80,16 @@ document
 
         e.preventDefault();
 
-        // Create FormData
         const formData = new FormData();
 
         formData.append(
             "name",
-            document.getElementById("name").value
+            document.getElementById("name").value.trim()
         );
 
         formData.append(
             "description",
-            document.getElementById("description").value
+            document.getElementById("description").value.trim()
         );
 
         formData.append(
@@ -115,12 +117,15 @@ document
             true
         );
 
-        // Upload Image
-        // ==========================================
-        // UPLOAD MULTIPLE IMAGES
-        // ==========================================
-
         const imageFiles = document.getElementById("images").files;
+
+        if (imageFiles.length === 0) {
+
+            alert("Please select at least one image.");
+
+            return;
+
+        }
 
         for (let i = 0; i < imageFiles.length; i++) {
 
@@ -148,7 +153,7 @@ document
 
             if (!response.ok) {
 
-                alert(data.message);
+                alert(data.message || "Unable to add product.");
 
                 return;
 
@@ -160,7 +165,7 @@ document
 
         } catch (error) {
 
-            console.error(error);
+            console.error("Add Product Error:", error);
 
             alert("Unable to add product.");
 
