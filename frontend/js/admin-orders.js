@@ -92,7 +92,7 @@ async function loadOrders() {
             html += `
                 <tr>
 
-                    <td>${order._id.slice(-8)}</td>
+                    <td>#${order._id.slice(-8)}</td>
 
                     <td>
                         <strong>${customerName}</strong><br>
@@ -135,10 +135,11 @@ async function loadOrders() {
                     <td>
 
                         <a
-                            href="order-details.html?id=${order._id}"
-                            class="action-btn edit-btn"
-                        >
+                            href="admin-order-details.html?id=${order._id}"
+                            class="action-btn edit-btn">
+
                             View
+
                         </a>
 
                     </td>
