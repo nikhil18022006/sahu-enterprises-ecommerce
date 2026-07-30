@@ -5,122 +5,154 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Order Details | Sahu Admin</title>
 
-    <link rel="icon" href="../../images/logo.png">
+    <link rel="icon"
+          href="../../images/logo.png">
 
-    <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/admin.css">
-    <link rel="stylesheet" href="../../css/admin-order-details.css">
+    <link rel="stylesheet"
+          href="../../css/style.css">
+
+    <link rel="stylesheet"
+          href="../../css/admin.css">
+
+    <link rel="stylesheet"
+          href="../../css/admin-order-details.css">
 
 </head>
 
 <body>
 
     <!-- ===========================
-         ADMIN LAYOUT
+         SIDEBAR
     ============================ -->
 
-    <div class="admin-container">
+    <aside class="sidebar">
 
-        <!-- Sidebar -->
+        <div class="logo">
 
-        <aside class="sidebar">
+            <h2>Sahu Admin</h2>
 
-            <div class="logo">
+        </div>
 
-                <h2>Sahu Admin</h2>
+        <ul class="menu">
 
-            </div>
+            <li>
+                <a href="dashboard.html">
+                    Dashboard
+                </a>
+            </li>
 
-            <ul class="menu">
+            <li>
+                <a href="products.html">
+                    Products
+                </a>
+            </li>
 
-                <li>
+            <li>
+                <a href="orders.html"
+                   class="active">
+                    Orders
+                </a>
+            </li>
 
-                    <a href="dashboard.html">
+            <li>
+                <a href="users.html">
+                    Users
+                </a>
+            </li>
 
-                        Dashboard
+        </ul>
 
-                    </a>
+    </aside>
 
-                </li>
+    <!-- ===========================
+         MAIN CONTENT
+    ============================ -->
 
-                <li>
+    <main class="main-content">
 
-                    <a href="products.html">
+        <!-- PAGE HEADER -->
 
-                        Products
+        <section class="page-header">
 
-                    </a>
+            <div class="page-left">
 
-                </li>
+                <a href="orders.html"
+                   class="back-btn">
 
-                <li>
+                    ← Back to Orders
 
-                    <a href="orders.html"
-                        class="active">
+                </a>
 
-                        Orders
+                <div>
 
-                    </a>
+                    <h1>
 
-                </li>
+                        Order Details
 
-                <li>
-
-                    <a href="users.html">
-
-                        Users
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </aside>
-
-        <!-- ===========================
-             MAIN CONTENT
-        ============================ -->
-
-        <main class="main-content">
-
-            <header class="topbar">
-
-                <h1>
-
-                    Order Details
-
-                </h1>
-
-            </header>
-
-            <section id="order-details">
-
-                <div class="loading">
-
-                    <h2>
-
-                        Loading Order...
-
-                    </h2>
+                    </h1>
 
                     <p>
 
-                        Please wait while we fetch the order.
+                        View complete customer, payment and shipping information.
 
                     </p>
 
                 </div>
 
-            </section>
+            </div>
 
-        </main>
+            <div class="page-right">
 
-    </div>
+                <button
+                    id="printLabelBtn"
+                    class="btn success-btn">
+
+                    🖨 Print Label
+
+                </button>
+
+                <button
+                    id="printInvoiceBtn"
+                    class="btn primary-btn">
+
+                    📄 Print Invoice
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- ORDER DETAILS -->
+
+        <section id="order-details">
+
+            <div class="loading">
+
+                <div class="loader"></div>
+
+                <h2>
+
+                    Loading Order...
+
+                </h2>
+
+                <p>
+
+                    Please wait while we fetch order information.
+
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
 
     <!-- ===========================
          JAVASCRIPT

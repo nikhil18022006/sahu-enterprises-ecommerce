@@ -1,18 +1,17 @@
 // ==========================================
 // SAHU ENTERPRISES
 // ADMIN ORDER DETAILS
+// PART 3.1
 // ==========================================
 
-
+// Authentication
 
 const token = localStorage.getItem("token");
 const user = JSON.parse(localStorage.getItem("user"));
 
 const orderContainer = document.getElementById("order-details");
 
-// ==========================================
-// AUTH CHECK
-// ==========================================
+// Redirect if not logged in
 
 if (!token || !user) {
 
@@ -22,6 +21,8 @@ if (!token || !user) {
 
 }
 
+// Allow only admin
+
 if (user.role !== "admin") {
 
     alert("Access Denied");
@@ -30,9 +31,7 @@ if (user.role !== "admin") {
 
 }
 
-// ==========================================
-// GET ORDER ID
-// ==========================================
+// Get Order ID
 
 const params = new URLSearchParams(window.location.search);
 
@@ -45,32 +44,76 @@ if (!orderId) {
 }
 
 // ==========================================
-// LOAD ORDER
+// Helper Functions
 // ==========================================
 
-async function loadOrder() {
+// Safe image URL
 
-    try {
+function getProductImage(product){
 
-        orderContainer.innerHTML = `
+    if(product?.images?.length){
 
-            <div class="loading">
+        const img = product.images[0];
 
-                <h2>
+        if(img.startsWith("http")){
 
-                    Loading Order...
+            return img;
 
-                </h2>
+        }
 
-                <p>
+        return `${BASE_URL.replace("/api","")}/${img}`;
 
-                    Please wait while we fetch order details.
+    }
 
-                </p>
+    return "../../images/no-image.png";
 
-            </div>
+}
 
-        `;
+// Format Date
+
+function formatDate(date){
+
+    return new Date(date).toLocaleDateString("en-IN",{
+
+        day:"2-digit",
+
+        month:"long",
+
+        year:"numeric"
+
+    });
+
+}
+
+// Currency
+
+function money(amount){
+
+    return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
+
+}
+
+// ==========================================
+// Load Order
+// ==========================================
+
+async function loadOrder(){
+
+    orderContainer.innerHTML = `
+
+        <div class="loading">
+
+            <div class="loader"></div>
+
+            <h2>Loading Order...</h2>
+
+            <p>Please wait...</p>
+
+        </div>
+
+    `;
+
+    try{
 
         const response = await fetch(
 
@@ -78,11 +121,9 @@ async function loadOrder() {
 
             {
 
-                method: "GET",
+                headers:{
 
-                headers: {
-
-                    Authorization: `Bearer ${token}`
+                    Authorization:`Bearer ${token}`
 
                 }
 
@@ -92,65 +133,33 @@ async function loadOrder() {
 
         const data = await response.json();
 
-        if (!response.ok) {
+        if(!response.ok){
 
-            orderContainer.innerHTML = `
-
-                <div class="empty-state">
-
-                    <h2>
-
-                        Order Not Found
-
-                    </h2>
-
-                    <p>
-
-                        ${data.message || "Unable to fetch order."}
-
-                    </p>
-
-                    <br>
-
-                    <a
-                        href="orders.html"
-                        class="back-btn">
-
-                        Back to Orders
-
-                    </a>
-
-                </div>
-
-            `;
-
-            return;
+            throw new Error(data.message || "Unable to fetch order");
 
         }
 
-        displayOrder(data.order);
+        renderOrder(data.order);
 
     }
 
-    catch (error) {
+    catch(error){
 
-        console.error("ORDER DETAILS ERROR:", error);
+        console.error(error);
 
-        orderContainer.innerHTML = `
+        orderContainer.innerHTML=`
 
             <div class="empty-state">
 
-                <h2>
+                <h2>Order Not Found</h2>
 
-                    Something went wrong.
+                <p>${error.message}</p>
 
-                </h2>
+                <a href="orders.html" class="back-btn">
 
-                <p>
+                    ← Back to Orders
 
-                    Unable to load this order.
-
-                </p>
+                </a>
 
             </div>
 
@@ -159,73 +168,53 @@ async function loadOrder() {
     }
 
 }
-
 // ==========================================
-// DISPLAY ORDER
+// PART 3.2
+// RENDER ORDER
 // ==========================================
 
-function displayOrder(order) {
+function renderOrder(order){
 
     const address = order.shippingAddress || {};
 
     const status = order.orderStatus || "Pending";
 
-    const statusClass = status
-        .toLowerCase()
-        .replace(/\s+/g, "-");
-
-    const orderDate = new Date(order.createdAt)
-        .toLocaleDateString("en-IN", {
-
-            day: "2-digit",
-
-            month: "long",
-
-            year: "numeric"
-
-        });
+    const statusClass = status.toLowerCase().replace(/\s+/g,"-");
 
     let productsHTML = "";
 
-    (order.items || []).forEach(item => {
+    (order.items || []).forEach(item=>{
 
         const product = item.product || {};
 
-        productsHTML += `        <div class="product-item">
+        productsHTML += `
+
+        <div class="product-item">
 
             <div class="product-left">
 
                 <img
-                    src="${product.images?.[0] || "../images/no-image.png"}"
-                    alt="${product.name || "Product"}">
+                    src="${getProductImage(product)}"
+                    alt="${product.name || "Product"}"
+                    onerror="this.src='../../images/no-image.png'">
 
                 <div class="product-details">
 
-                    <h3>
-
-                        ${product.name || "Product"}
-
-                    </h3>
+                    <h3>${product.name || "Product"}</h3>
 
                     <p>
-
                         SKU :
                         ${product._id?.slice(-6) || "N/A"}
-
                     </p>
 
                     <p>
-
                         Unit Price :
-                        ₹${item.price}
-
+                        ${money(item.price)}
                     </p>
 
                     <p>
-
                         Quantity :
                         ${item.quantity}
-
                     </p>
 
                 </div>
@@ -234,17 +223,9 @@ function displayOrder(order) {
 
             <div class="product-price">
 
-                <h4>
+                <h4>Subtotal</h4>
 
-                    Subtotal
-
-                </h4>
-
-                <h2>
-
-                    ₹${item.price * item.quantity}
-
-                </h2>
+                <h2>${money(item.price * item.quantity)}</h2>
 
             </div>
 
@@ -258,7 +239,7 @@ function displayOrder(order) {
 
     <div class="order-card">
 
-        <!-- ORDER HEADER -->
+        <!-- Header -->
 
         <div class="order-header">
 
@@ -272,8 +253,7 @@ function displayOrder(order) {
 
                 <p>
 
-                    Ordered on :
-                    ${orderDate}
+                    Ordered on ${formatDate(order.createdAt)}
 
                 </p>
 
@@ -287,17 +267,15 @@ function displayOrder(order) {
 
         </div>
 
-        <!-- CUSTOMER / ADDRESS / PAYMENT -->
+        <!-- Info -->
 
         <div class="order-info">
 
+            <!-- Customer -->
+
             <div class="info-box customer-box">
 
-                <h3>
-
-                    Customer Details
-
-                </h3>
+                <h3>Customer Details</h3>
 
                 <p>
 
@@ -325,13 +303,11 @@ function displayOrder(order) {
 
             </div>
 
+            <!-- Shipping -->
+
             <div class="info-box address-box">
 
-                <h3>
-
-                    Shipping Address
-
-                </h3>
+                <h3>Shipping Address</h3>
 
                 <p>${address.fullName || ""}</p>
 
@@ -342,31 +318,22 @@ function displayOrder(order) {
                 <p>
 
                     ${address.city || ""},
+
                     ${address.state || ""}
 
                 </p>
 
-                <p>
+                <p>${address.pincode || ""}</p>
 
-                    ${address.pincode || ""}
-
-                </p>
-
-                <p>
-
-                    ${address.country || ""}
-
-                </p>
+                <p>${address.country || ""}</p>
 
             </div>
 
+            <!-- Payment -->
+
             <div class="info-box payment-box">
 
-                <h3>
-
-                    Payment Details
-
-                </h3>
+                <h3>Payment Details</h3>
 
                 <p>
 
@@ -396,208 +363,75 @@ function displayOrder(order) {
 
         </div>
 
-        <!-- PRODUCTS -->
+        <!-- Products -->
 
         <div class="products">
 
-            <h2>
-
-                Ordered Products
-
-            </h2>
+            <h2>Ordered Products</h2>
 
             ${productsHTML}
 
         </div>
 
-        <!-- SUMMARY -->
+        <!-- Summary -->
 
         <div class="summary">
 
-            <h2>
-
-                Order Summary
-
-            </h2>
+            <h2>Order Summary</h2>
 
             <div class="summary-row">
 
-                <span>
+                <span>Total Items</span>
 
-                    Total Items
-
-                </span>
-
-                <span>
-
-                    ${(order.items || []).length}
-
-                </span>
+                <span>${order.items.length}</span>
 
             </div>
 
             <div class="summary-row">
 
-                <span>
+                <span>Shipping</span>
 
-                    Shipping
-
-                </span>
-
-                <span>
-
-                    FREE
-
-                </span>
+                <span>FREE</span>
 
             </div>
 
             <div class="summary-row">
 
-                <span>
+                <span>Payment</span>
 
-                    Payment
-
-                </span>
-
-                <span>
-
-                    ${order.paymentMethod}
-
-                </span>
+                <span>${order.paymentMethod}</span>
 
             </div>
 
             <div class="summary-row total">
 
-                <span>
+                <span>Grand Total</span>
 
-                    Grand Total
-
-                </span>
-
-                <span>
-
-                    ₹${order.totalAmount}
-
-                </span>
+                <span>${money(order.totalAmount)}</span>
 
             </div>
 
         </div>
-
-        <!-- SHIPPING LABEL -->
 
         <div id="shipping-label" class="shipping-label">
 
-            <h2>
-
-                SHIPPING LABEL
-
-            </h2>
-
-            <div class="label-grid">
-
-                <div class="label-box">
-
-                    <h3>
-
-                        FROM
-
-                    </h3>
-
-                    <p><strong>Sahu Enterprises</strong></p>
-
-                    <p>Your Warehouse Address</p>
-
-                    <p>Ranchi, Jharkhand</p>
-
-                    <p>India</p>
-
-                </div>
-
-                <div class="label-box">
-
-                    <h3>
-
-                        TO
-
-                    </h3>
-
-                    <p>
-
-                        <strong>${address.fullName || ""}</strong>
-
-                    </p>
-
-                    <p>${address.phone || ""}</p>
-
-                    <p>${address.address || ""}</p>
-
-                    <p>
-
-                        ${address.city || ""}
-
-                    </p>
-
-                    <p>
-
-                        ${address.state || ""}
-
-                    </p>
-
-                    <p>
-
-                        ${address.pincode || ""}
-
-                    </p>
-
-                    <p>
-
-                        ${address.country || ""}
-
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="label-footer">
-
-                <span>
-
-                    Order :
-                    ${order._id.slice(-8)}
-
-                </span>
-
-                <span>
-
-                    Payment :
-                    ${order.paymentMethod}
-
-                </span>
-
-            </div>
+            <h2>Shipping Label</h2>
 
         </div>
-                <!-- ===========================
-             ACTION BUTTONS
-        ============================ -->
 
         <div class="order-actions">
 
             <button
-                class="print-label-btn"
-                onclick="printShippingLabel()">
+                class="btn success-btn"
+                id="printLabel">
 
-                🖨 Print Shipping Label
+                🖨 Print Label
 
             </button>
 
             <button
-                class="print-invoice-btn"
-                onclick="printInvoice()">
+                class="btn primary-btn"
+                id="printInvoice">
 
                 📄 Print Invoice
 
@@ -618,18 +452,94 @@ function displayOrder(order) {
     `;
 
 }
+// ==========================================
+// PART 3.3
+// SHIPPING LABEL + PRINT + EVENTS
+// ==========================================
+
+function updateShippingLabel(order){
+
+    const address = order.shippingAddress || {};
+
+    const label = document.getElementById("shipping-label");
+
+    if(!label) return;
+
+    label.innerHTML = `
+
+        <h2>SHIPPING LABEL</h2>
+
+        <div class="label-grid">
+
+            <div class="label-box">
+
+                <h3>FROM</h3>
+
+                <p><strong>Sahu Enterprises</strong></p>
+
+                <p>Ranchi</p>
+
+                <p>Jharkhand</p>
+
+                <p>India</p>
+
+            </div>
+
+            <div class="label-box">
+
+                <h3>TO</h3>
+
+                <p><strong>${address.fullName || ""}</strong></p>
+
+                <p>${address.phone || ""}</p>
+
+                <p>${address.address || ""}</p>
+
+                <p>${address.city || ""}, ${address.state || ""}</p>
+
+                <p>${address.pincode || ""}</p>
+
+                <p>${address.country || ""}</p>
+
+            </div>
+
+        </div>
+
+        <div class="label-footer">
+
+            <span>
+
+                Order :
+                ${order._id.slice(-8)}
+
+            </span>
+
+            <span>
+
+                Payment :
+                ${order.paymentMethod}
+
+            </span>
+
+        </div>
+
+    `;
+
+}
 
 // ==========================================
 // PRINT SHIPPING LABEL
 // ==========================================
 
-function printShippingLabel() {
+function printShippingLabel(){
 
-    const label = document.getElementById("shipping-label").innerHTML;
+    const label = document.getElementById("shipping-label");
 
-    const printWindow = window.open("", "_blank");
+    if(!label) return;
 
-    printWindow.document.write(`
+    const win = window.open("", "_blank");
+
+    win.document.write(`
 
         <html>
 
@@ -647,47 +557,27 @@ function printShippingLabel() {
 
                 }
 
-                h2{
-
-                    text-align:center;
-
-                    margin-bottom:30px;
-
-                }
-
                 .label-grid{
 
                     display:grid;
 
                     grid-template-columns:1fr 1fr;
 
-                    gap:30px;
+                    gap:25px;
 
                 }
 
                 .label-box{
 
-                    border:1px solid #000;
+                    border:1px solid #333;
 
                     padding:15px;
-
-                    border-radius:8px;
-
-                }
-
-                .label-box h3{
-
-                    margin-bottom:15px;
-
-                    border-bottom:1px solid #000;
-
-                    padding-bottom:8px;
 
                 }
 
                 .label-footer{
 
-                    margin-top:25px;
+                    margin-top:20px;
 
                     display:flex;
 
@@ -703,7 +593,7 @@ function printShippingLabel() {
 
         <body>
 
-            ${label}
+            ${label.innerHTML}
 
         </body>
 
@@ -711,28 +601,63 @@ function printShippingLabel() {
 
     `);
 
-    printWindow.document.close();
+    win.document.close();
 
-    printWindow.focus();
+    win.focus();
 
-    printWindow.print();
+    win.print();
 
-    printWindow.close();
+    win.close();
 
 }
 
 // ==========================================
-// PRINT COMPLETE PAGE AS INVOICE
+// PRINT COMPLETE PAGE
 // ==========================================
 
-function printInvoice() {
+function printInvoice(){
 
     window.print();
 
 }
 
 // ==========================================
-// PAGE LOAD
+// BUTTON EVENTS
+// ==========================================
+
+document.addEventListener("click",(e)=>{
+
+    if(e.target.id==="printLabel"){
+
+        printShippingLabel();
+
+    }
+
+    if(e.target.id==="printInvoice"){
+
+        printInvoice();
+
+    }
+
+});
+
+// ==========================================
+// PATCH renderOrder()
+// ==========================================
+//
+// Inside renderOrder(order),
+// after:
+//
+// orderContainer.innerHTML = `...`;
+//
+// ADD THIS LINE:
+//
+// updateShippingLabel(order);
+//
+// ==========================================
+
+// ==========================================
+// INITIAL LOAD
 // ==========================================
 
 loadOrder();
