@@ -26,144 +26,96 @@
 
         <!-- Sidebar -->
 
-        <aside class="sidebar">
+<aside class="sidebar">
 
-            <div class="sidebar-logo">
+    <div class="logo">
 
-                <img src="../../images/logo.png" alt="Logo">
-
-                <h2>Sahu Admin</h2>
-
-            </div>
-
-            <nav>
-
-                <ul>
-
-                    <li>
-
-                        <a href="dashboard.html">
-
-                            Dashboard
-
-                        </a>
-
-                    </li>
-
-                    <li>
-
-                        <a href="products.html">
-
-                            Products
-
-                        </a>
-
-                    </li>
-
-                    <li>
-
-                        <a href="users.html">
-
-                            Users
-
-                        </a>
-
-                    </li>
-
-                    <li>
-
-                        <a href="../orders.html" class="active">
-
-                            Orders
-
-                        </a>
-
-                    </li>
-
-                    <li>
-
-                        <a href="../../index.html">
-
-                            Visit Store
-
-                        </a>
-
-                    </li>
-
-                </ul>
-
-            </nav>
-
-        </aside>
-
-        <!-- Main Content -->
-
-        <main class="admin-main">
-
-            <!-- Header -->
-
-            <div class="admin-header">
-
-                <div>
-
-                    <h1>
-
-                        Order Details
-
-                    </h1>
-
-                    <p>
-
-                        View customer information,
-                        shipping address,
-                        ordered products,
-                        invoice and shipping label.
-
-                    </p>
-
-                </div>
-
-                <a href="orders.html" class="back-btn">
-
-                    ← Back to Orders
-
-                </a>
-
-            </div>
-
-            <!-- Dynamic Order -->
-
-            <section id="order-details">
-
-                <div class="loading">
-
-                    <h2>
-
-                        Loading Order...
-
-                    </h2>
-
-                    <p>
-
-                        Please wait...
-
-                    </p>
-
-                </div>
-
-            </section>
-
-        </main>
+        <h2>Sahu Admin</h2>
 
     </div>
 
-    <!-- ===========================
-         JAVASCRIPT
-    ============================ -->
+    <ul class="menu">
 
-    <script src="../../js/api.js"></script>
-    <script src="../../js/admin-order-details.js"></script>
+        <li>
 
-</body>
+            <a href="dashboard.html">
 
-</html>
+                Dashboard
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="products.html">
+
+                Products
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="orders.html" class="active">
+
+                Orders
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="users.html">
+
+                Users
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</aside>
+
+<!-- Main -->
+
+<main class="main-content">
+
+    <header class="topbar">
+
+        <h1>
+
+            Order Details
+
+        </h1>
+
+    </header>
+
+    <section id="order-details">
+
+        <div class="loading">
+
+            <h2>
+
+                Loading Order...
+
+            </h2>
+
+            <p>
+
+                Please wait...
+
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="../../js/api.js"></script>
+
+<script src="../../js/admin-order-details.js"></script>
