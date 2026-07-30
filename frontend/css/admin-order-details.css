@@ -80,17 +80,15 @@ body{
 
 .main-content{
 
-    margin-left:240px;
+    margin-left:220px;
 
-    width:calc(100% - 240px);
+    padding:30px;
+
+    flex:1;
+
+    width:auto;
 
     min-height:100vh;
-
-    padding:35px;
-
-    background:#f5f7fb;
-
-    box-sizing:border-box;
 
 }
 
@@ -164,9 +162,7 @@ body{
 
     width:100%;
 
-    max-width:1300px;
-
-    margin:auto;
+    max-width:none;
 
     background:#fff;
 
@@ -1116,5 +1112,46 @@ body{
         padding:18px;
 
     }
+
+}
+/* ===========================
+   FULL WIDTH FIX
+=========================== */
+
+#order-details{
+
+    width:100%;
+
+}
+
+.order-card{
+
+    width:100%;
+
+}
+
+.products,
+
+.summary,
+
+.shipping-label,
+
+.invoice{
+
+    width:100%;
+
+}
+
+.product-left{
+
+    flex:1;
+
+}
+
+.product-price{
+
+    min-width:140px;
+
+    text-align:right;
 
 }
