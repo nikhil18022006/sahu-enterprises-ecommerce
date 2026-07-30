@@ -1,25 +1,18 @@
 // ==========================================
 // SAHU ENTERPRISES
-// EDIT PRODUCT
+// ADMIN ORDERS
 // ==========================================
-const user = JSON.parse(localStorage.getItem("user"));
 
-if (!user || user.role !== "admin") {
-
-    alert("Access Denied");
-
-    window.location.href = "../login.html";
-
-}
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://sahu-enterprises-ecommerce.onrender.com/api";
 
 const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user"));
 
 // ==========================================
 // CHECK LOGIN
 // ==========================================
 
-if (!token) {
+if (!token || !user) {
 
     alert("Please login first.");
 
@@ -27,101 +20,27 @@ if (!token) {
 
 }
 
-// ==========================================
-// GET PRODUCT ID FROM URL
-// ==========================================
+if (user.role !== "admin") {
 
-const params = new URLSearchParams(window.location.search);
+    alert("Access Denied");
 
-const productId = params.get("id");
-
-// ==========================================
-// LOAD PRODUCT
-// ==========================================
-
-async function loadProduct() {
-
-    try {
-
-        const response = await fetch(`${BASE_URL}/products/${productId}`);
-
-        const data = await response.json();
-
-        const product = data.product;
-
-        document.getElementById("name").value = product.name;
-
-        document.getElementById("description").value = product.description;
-
-        document.getElementById("category").value = product.category;
-
-        document.getElementById("price").value = product.price;
-
-        document.getElementById("stock").value = product.stock;
-
-        document.getElementById("image").value = product.images[0];
-
-        document.getElementById("featured").checked = product.isFeatured;
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Unable to load product.");
-
-    }
+    window.location.href = "../login.html";
 
 }
 
 // ==========================================
-// UPDATE PRODUCT
+// LOAD ORDERS
 // ==========================================
 
-document
-.getElementById("edit-product-form")
-.addEventListener("submit", async function (e) {
-
-    e.preventDefault();
-
-    const product = {
-
-        name: document.getElementById("name").value,
-
-        description: document.getElementById("description").value,
-
-        category: document.getElementById("category").value,
-
-        price: Number(document.getElementById("price").value),
-
-        stock: Number(document.getElementById("stock").value),
-
-        images: [
-
-            document.getElementById("image").value
-
-        ],
-
-        isFeatured: document.getElementById("featured").checked,
-
-        isActive: true
-
-    };
+async function loadOrders() {
 
     try {
 
-        const response = await fetch(`${BASE_URL}/products/${productId}`, {
-
-            method: "PUT",
+        const response = await fetch(`${BASE_URL}/orders`, {
 
             headers: {
-
-                "Content-Type": "application/json",
-
                 Authorization: `Bearer ${token}`
-
-            },
-
-            body: JSON.stringify(product)
+            }
 
         });
 
@@ -129,23 +48,152 @@ document
 
         if (!response.ok) {
 
-            alert(data.message);
+            alert(data.message || "Unable to load orders.");
 
             return;
 
         }
 
-        alert("Product Updated Successfully!");
+        const ordersList = document.getElementById("orders-list");
 
-        window.location.href = "products.html";
+        ordersList.innerHTML = "";
+
+        data.orders.forEach(order => {
+
+            ordersList.innerHTML += `
+
+                <tr>
+
+                    <td>${order._id}</td>
+
+                    <td>${order.user?.name || "N/A"}</td>
+
+                    <td>₹${order.totalAmount}</td>
+
+                    <td>${order.paymentMethod}</td>
+
+                    <td>
+
+                        <select
+                            class="status-select"
+                            onchange="updateStatus('${order._id}', this.value)"
+                        >
+
+                            <option value="Pending" ${order.orderStatus === "Pending" ? "selected" : ""}>Pending</option>
+
+                            <option value="Confirmed" ${order.orderStatus === "Confirmed" ? "selected" : ""}>Confirmed</option>
+
+                            <option value="Packed" ${order.orderStatus === "Packed" ? "selected" : ""}>Packed</option>
+
+                            <option value="Shipped" ${order.orderStatus === "Shipped" ? "selected" : ""}>Shipped</option>
+
+                            <option value="Out for Delivery" ${order.orderStatus === "Out for Delivery" ? "selected" : ""}>Out for Delivery</option>
+
+                            <option value="Delivered" ${order.orderStatus === "Delivered" ? "selected" : ""}>Delivered</option>
+
+                            <option value="Cancelled" ${order.orderStatus === "Cancelled" ? "selected" : ""}>Cancelled</option>
+
+                        </select>
+
+                    </td>
+
+                    <td>
+
+                        ${new Date(order.updatedAt).toLocaleString()}
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Load Orders Error:", error);
 
-        alert("Unable to update product.");
+        alert("Unable to load orders.");
 
     }
+
+}
+
+// ==========================================
+// UPDATE STATUS
+// ==========================================
+
+async function updateStatus(orderId, orderStatus) {
+
+    try {
+
+        const response = await fetch(
+
+            `${BASE_URL}/orders/${orderId}/status`,
+
+            {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+
+                },
+
+                body: JSON.stringify({
+
+                    orderStatus
+
+                })
+
+            }
+
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            alert(data.message || "Failed to update order.");
+
+            return;
+
+        }
+
+        alert("Order updated successfully.");
+
+        loadOrders();
+
+    } catch (error) {
+
+        console.error("Update Status Error:", error);
+
+        alert("Unable to update order.");
+
+    }
+
+}
+
+// ==========================================
+// SEARCH ORDERS
+// ==========================================
+
+document.getElementById("search-order")
+.addEventListener("input", function () {
+
+    const search = this.value.toLowerCase();
+
+    document.querySelectorAll("#orders-list tr").forEach(row => {
+
+        row.style.display = row.textContent
+            .toLowerCase()
+            .includes(search)
+            ? ""
+            : "none";
+
+    });
 
 });
 
@@ -153,4 +201,4 @@ document
 // PAGE LOAD
 // ==========================================
 
-loadProduct();
+loadOrders();
