@@ -1155,3 +1155,144 @@ body{
     text-align:right;
 
 }
+/* ==========================================
+   FULL PAGE LAYOUT
+========================================== */
+
+.main-content{
+
+    margin-left:220px;
+
+    width:calc(100% - 220px);
+
+    max-width:none !important;
+
+    padding:30px 40px;
+
+    background:#f5f7fb;
+
+}
+
+#order-details{
+
+    width:100%;
+
+}
+
+.order-card{
+
+    width:100%;
+
+    max-width:1400px;
+
+    margin:0 auto;
+
+}
+
+/* ==========================================
+   ORDER INFO
+========================================== */
+
+.order-info{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:25px;
+
+}
+
+.info-box{
+
+    min-height:260px;
+
+}
+
+/* ==========================================
+   PRODUCTS
+========================================== */
+
+.products{
+
+    width:100%;
+
+    margin-top:45px;
+
+}
+
+.product-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    width:100%;
+
+    gap:30px;
+
+}
+
+.product-left{
+
+    flex:1;
+
+}
+
+.product-price{
+
+    min-width:180px;
+
+    text-align:right;
+
+}
+
+/* ==========================================
+   SUMMARY
+========================================== */
+
+.summary{
+
+    width:100%;
+
+    margin-top:45px;
+
+}
+
+/* ==========================================
+   SHIPPING LABEL
+========================================== */
+
+.shipping-label{
+
+    width:100%;
+
+    margin-top:45px;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:992px){
+
+    .main-content{
+
+        margin-left:0;
+
+        width:100%;
+
+        padding:20px;
+
+    }
+
+    .order-info{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
