@@ -5,7 +5,6 @@
 
 const productContainer = document.getElementById("shop-products");
 function getProductImage(product) {
-
     const BACKEND_URL = "https://sahu-enterprises-ecommerce.onrender.com";
 
     if (!product.images || product.images.length === 0) {
@@ -14,17 +13,20 @@ function getProductImage(product) {
 
     let image = product.images[0];
 
-    // Full URL already
+    // Catch any localhost / 127.0.0.1 URLs saved during local testing
+    if (image.includes("127.0.0.1") || image.includes("localhost")) {
+        const path = image.split(/:\d+/)[1]; // strip protocol+host+port, keep path after port
+        image = path || "";
+    }
+
     if (image.startsWith("https://")) {
         return image;
     }
 
-    // Fix old HTTP URLs
     if (image.startsWith("http://")) {
         return image.replace("http://", "https://");
     }
 
-    // Relative path like uploads/products/img.jpg
     if (!image.startsWith("/")) {
         image = "/" + image;
     }
