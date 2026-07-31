@@ -42,6 +42,7 @@ async function displayProducts() {
         }
 
         productContainer.innerHTML = "";
+        console.log("Products:", data.products);
 
         data.products.forEach((product) => {
 
