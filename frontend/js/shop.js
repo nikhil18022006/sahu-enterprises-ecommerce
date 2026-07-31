@@ -4,34 +4,27 @@
 // ==========================================
 
 const productContainer = document.getElementById("shop-products");
-function getProductImage(product) {
-    const BACKEND_URL = "https://sahu-enterprises-ecommerce.onrender.com";
+const SERVER_URL = "https://sahu-enterprises-ecommerce.onrender.com";
 
-    if (!product.images || product.images.length === 0) {
-        return "images/no-image.png";
+function getImage(image){
+
+    if(!image){
+        return "../../images/no-image.png";
     }
 
-    let image = product.images[0];
-
-    // Catch any localhost / 127.0.0.1 URLs saved during local testing
-    if (image.includes("127.0.0.1") || image.includes("localhost")) {
-        const path = image.split(/:\d+/)[1]; // strip protocol+host+port, keep path after port
-        image = path || "";
-    }
-
-    if (image.startsWith("https://")) {
+    if(image.startsWith("https://")){
         return image;
     }
 
-    if (image.startsWith("http://")) {
-        return image.replace("http://", "https://");
+    if(image.startsWith("http://")){
+        return image.replace("http://","https://");
     }
 
-    if (!image.startsWith("/")) {
-        image = "/" + image;
+    if(image.startsWith("/")){
+        return SERVER_URL + image;
     }
 
-    return BACKEND_URL + image;
+    return SERVER_URL + "/" + image;
 }
 async function displayProducts() {
 
