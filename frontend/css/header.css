@@ -17,18 +17,21 @@ header{
     text-decoration:none;
 }
 .logo{
-    font-size:32px;
-    font-weight:bold;
+
+    font-size:30px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
 }
 
 .search input{
-    width:350px;
-    padding:12px;
 
-    border:none;
-    border-radius:8px;
+    width:100%;
 
-    font-size:16px;
+    max-width:350px;
+
 }
 .menu a.active{
     color:var(--primary);
