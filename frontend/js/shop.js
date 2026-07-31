@@ -4,7 +4,33 @@
 // ==========================================
 
 const productContainer = document.getElementById("shop-products");
+function getProductImage(product) {
 
+    const BACKEND_URL = "https://sahu-enterprises-ecommerce.onrender.com";
+
+    if (!product.images || product.images.length === 0) {
+        return "images/no-image.png";
+    }
+
+    let image = product.images[0];
+
+    // Full URL already
+    if (image.startsWith("https://")) {
+        return image;
+    }
+
+    // Fix old HTTP URLs
+    if (image.startsWith("http://")) {
+        return image.replace("http://", "https://");
+    }
+
+    // Relative path like uploads/products/img.jpg
+    if (!image.startsWith("/")) {
+        image = "/" + image;
+    }
+
+    return BACKEND_URL + image;
+}
 async function displayProducts() {
 
     try {
@@ -30,7 +56,7 @@ async function displayProducts() {
                     <span class="badge">NEW</span>
 
                     <a href="product.html?id=${product._id}">
-                        <img src="${product.images[0]}" alt="${product.name}">
+                        <img src="${getProductImage(product)}" alt="${product.name}">
                     </a>
 
                     <h3>
