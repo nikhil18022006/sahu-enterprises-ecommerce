@@ -37,7 +37,7 @@ async function loadProduct() {
         // MAIN PRODUCT DETAILS
         // ==========================
 
-        mainImage.src = getImage(product.images?.[0]);
+        mainImage.src = product.images[0];
         mainImage.alt = product.name;
 
         document.getElementById("product-name").textContent = product.name;
@@ -58,7 +58,7 @@ async function loadProduct() {
 
             const thumbnail = document.createElement("img");
 
-            thumbnail.src = getImage(image);
+            thumbnail.src = image;
 
             thumbnail.alt = `${product.name} ${index + 1}`;
 
@@ -133,7 +133,7 @@ document
 
         for (let i = 0; i < qty; i++) {
 
-            addToCart(product._id);
+            addToCart(product.id);
 
         }
 
