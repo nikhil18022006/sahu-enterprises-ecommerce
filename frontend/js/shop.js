@@ -6,21 +6,45 @@
 const productContainer = document.getElementById("shop-products");
 const SERVER_URL = "https://sahu-enterprises-ecommerce.onrender.com";
 
-function getImage(image){
+function getImage(image) {
 
-    if(!image){
+    if (!image) {
         return "../../images/no-image.png";
     }
 
-    if(image.startsWith("https://")){
+    if (image.startsWith("https://")) {
         return image;
     }
 
-    if(image.startsWith("http://")){
-        return image.replace("http://","https://");
+    if (image.startsWith("http://")) {
+        return image.replace("http://", "https://");
     }
 
-    if(image.startsWith("/")){
+    if (image.startsWith("/")) {
+        return SERVER_URL + image;
+    }
+
+    return SERVER_URL + "/" + image;
+}
+const SERVER_URL = "https://sahu-enterprises-ecommerce.onrender.com";
+
+function getProductImage(product) {
+
+    if (!product.images || product.images.length === 0) {
+        return "images/no-image.png";
+    }
+
+    let image = product.images[0];
+
+    if (image.startsWith("https://")) {
+        return image;
+    }
+
+    if (image.includes("127.0.0.1") || image.includes("localhost")) {
+        return "images/no-image.png";
+    }
+
+    if (image.startsWith("/")) {
         return SERVER_URL + image;
     }
 
