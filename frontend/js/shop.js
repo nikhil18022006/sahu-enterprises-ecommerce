@@ -35,7 +35,7 @@ async function displayProducts() {
 
     try {
 
-        const response = await fetch(`${SERVER_URL}/products`);
+        const response = await fetch(`${BASE_URL}/products`);
 
         const data = await response.json();
 
