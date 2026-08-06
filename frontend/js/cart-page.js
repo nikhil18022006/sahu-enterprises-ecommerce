@@ -50,6 +50,9 @@ function displayCart() {
 
     cartContainer.innerHTML = "";
 
+    // Remove invalid products
+    cartItems = cartItems.filter(item => item.product);
+
     if (cartItems.length === 0) {
 
         cartContainer.innerHTML = `
@@ -61,13 +64,12 @@ function displayCart() {
 
         subtotalElement.textContent = "₹0";
         totalElement.textContent = "₹0";
-
         return;
     }
 
     let grandTotal = 0;
 
-    cartItems.forEach(function (item) {
+    cartItems.forEach(item => {
 
         const product = item.product;
 
@@ -90,26 +92,30 @@ function displayCart() {
 
                 <div class="quantity">
 
-                    <div class="quantity">
+                    <button onclick="decreaseQuantity('${product._id}')">-</button>
 
-    <button onclick="decreaseQuantity('${product._id}')">-</button>
+                    <input type="number" value="${item.quantity}" readonly>
 
-    <input type="number" value="${item.quantity}" readonly>
-
-    <button onclick="increaseQuantity('${product._id}')">+</button>
-
-</div>
+                    <button onclick="increaseQuantity('${product._id}')">+</button>
 
                 </div>
 
-                <button class="remove-btn" onclick="removeItem('${product._id}')">
+                <button class="remove-btn"
+                    onclick="removeItem('${product._id}')">
+
                     Remove
+
                 </button>
 
             </div>
         `;
 
     });
+
+    subtotalElement.textContent = "₹" + grandTotal;
+    totalElement.textContent = "₹" + grandTotal;
+
+
     console.log(cartItems);
     console.log("Grand Total:", grandTotal);
     console.log(subtotalElement);
