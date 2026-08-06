@@ -22,12 +22,10 @@ async function updateCartCount() {
 
     try {
 
-        const response = await fetch(${BASE_URL}/cart, {
-
+        const response = await fetch(`${BASE_URL}/cart`, {
             headers: {
-                Authorization: Bearer ${token}
+                Authorization: `Bearer ${token}`
             }
-
         });
 
         const data = await response.json();
@@ -37,9 +35,9 @@ async function updateCartCount() {
             return;
         }
 
-        const totalItems = data.cart.items.reduce((total, item) => {
+        const totalItems = data.cart?.items?.reduce((total, item) => {
             return total + item.quantity;
-        }, 0);
+        }, 0) || 0;
 
         cartCount.textContent = totalItems;
 
@@ -70,22 +68,18 @@ async function addToCart(productId) {
 
         }
 
-        const response = await fetch(${BASE_URL}/cart, {
+        const response = await fetch(`${BASE_URL}/cart`, {
 
             method: "POST",
 
             headers: {
-
                 "Content-Type": "application/json",
-                Authorization: Bearer ${token}
-
+                Authorization: `Bearer ${token}`
             },
 
             body: JSON.stringify({
-
                 productId,
                 quantity: 1
-
             })
 
         });
@@ -94,7 +88,7 @@ async function addToCart(productId) {
 
         if (!response.ok) {
 
-            alert(data.message);
+            alert(data.message || "Failed to add product to cart.");
             return;
 
         }
@@ -108,6 +102,7 @@ async function addToCart(productId) {
     } catch (error) {
 
         console.error(error);
+        alert("Something went wrong while adding to cart.");
 
     }
 
