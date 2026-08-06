@@ -16,18 +16,16 @@ async function updateCartCount() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-
         cartCount.textContent = "0";
         return;
-
     }
 
     try {
 
-        const response = await fetch(`${BASE_URL}/cart`, {
+        const response = await fetch(${BASE_URL}/cart, {
 
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: Bearer ${token}
             }
 
         });
@@ -35,10 +33,8 @@ async function updateCartCount() {
         const data = await response.json();
 
         if (!response.ok) {
-
             cartCount.textContent = "0";
             return;
-
         }
 
         const totalItems = data.cart.items.reduce((total, item) => {
@@ -50,16 +46,11 @@ async function updateCartCount() {
     } catch (error) {
 
         console.error(error);
-
         cartCount.textContent = "0";
 
     }
 
 }
-
-// ==========================================
-// SHOW COUNT WHEN PAGE LOADS
-// ==========================================
 
 // ==========================================
 // ADD TO CART
@@ -74,26 +65,25 @@ async function addToCart(productId) {
         if (!token) {
 
             alert("Please login first.");
-
             window.location.href = "login.html";
             return;
 
         }
 
-        const response = await fetch(`${BASE_URL}/cart`, {
+        const response = await fetch(${BASE_URL}/cart, {
 
             method: "POST",
 
             headers: {
 
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
+                Authorization: Bearer ${token}
 
             },
 
             body: JSON.stringify({
 
-                productId: productId,
+                productId,
                 quantity: 1
 
             })
@@ -109,7 +99,6 @@ async function addToCart(productId) {
 
         }
 
-        // Refresh cart badge
         await updateCartCount();
 
         alert("Product added to cart.");
@@ -123,3 +112,9 @@ async function addToCart(productId) {
     }
 
 }
+
+// ==========================================
+// SHOW CART COUNT ON PAGE LOAD
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", updateCartCount);
