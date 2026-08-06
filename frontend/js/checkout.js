@@ -296,7 +296,7 @@
                 // ONLINE PAYMENT (UPI / CARD)
                 // ==========================================
 
-                const subtotal = cartItems.reduce((total, item) => {
+                const grandTotal = checkoutCart.reduce((total, item) => {
 
                     if (!item.product) {
                         return total;
